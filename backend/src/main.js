@@ -1,11 +1,18 @@
 import express from "express";
+import "dotenv/config";
+import authRoute from "./route/auth.route.js";
 
 const app = express();
-const port = 3000;
 
-app.get("/", (res, req) => {
-  res.setEncoding("Hello from Express with Es Modules");
+app.use(express.json()); // will allow to red req.body
+
+const port = process.env.PORT || 3000;
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
 });
+
+app.use("api/auth", authRoute);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
