@@ -1,6 +1,8 @@
 import express from "express";
 import "dotenv/config";
 import authRoute from "./route/auth.route.js";
+import mongoose from "mongoose";
+import { connectDB } from "../src/config/db.config.js";
 
 const app = express();
 
@@ -14,6 +16,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("api/auth", authRoute);
 
+connectDB();
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
