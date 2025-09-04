@@ -91,7 +91,26 @@ const registerEmployee = async (req, res) => {
     res
       .status(500)
       .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
   }
 };
 
-const 
+const listPendingEmployees = async (req, res) => {
+  try {
+    //to get pending employees, excluding userId.
+    const pendingEmployees = await Employee.find({
+      pendingApproval: true,
+    }).select("-userId");
+
+    res.status(200).json({
+      message: "Pending employees retrieved",
+      success: true,
+      data: pendingEmployees,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
+  }
+};
