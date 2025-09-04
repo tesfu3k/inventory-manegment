@@ -173,13 +173,30 @@ const rejectEmployee = async (req, res) => {
 
     await User.findByIdAndDelete(userId);
 
+    res.status(200).json({
+      message: "Employee registration rejected",
+      success: true,
+      data: null,
+    });
+  } catch (error) {
     res
-      .status(200)
-      .json({
-        message: "Employee registration rejected",
-        success: true,
-        data: null,
-      });
+      .status(500)
+      .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
+  }
+};
+
+const listApprovedEmployees = async (req, res) => {
+  try {
+    const getApprovedEmployees = await Employee.find({ isActive: true }).select(
+      "-userId"
+    );
+
+    res.status(200).json({
+      message: "Employees retrieved",
+      success: true,
+      data: getApprovedEmployees,
+    });
   } catch (error) {
     res
       .status(500)
