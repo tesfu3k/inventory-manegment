@@ -114,3 +114,42 @@ const listPendingEmployees = async (req, res) => {
     console.log(error.message);
   }
 };
+
+const approveEmployee = async (req, res) => {
+  const employeeId = req.params.id;
+
+  try {
+    // Find employee only if pendingApproval is true
+    const employee = await Employee.findById({
+      _id: employeeId,
+      pendingApproval: true,
+    });
+
+    if (!employee)
+      return res.status(404).json({
+        message: "Employee not found or already approved",
+        success: false,
+        data: null,
+      });
+
+    //Update linked User
+    const updatedEmployee = await User.findByIdAndUpdate(employee.userId, {
+      isActive: true,
+    });
+
+    // Exclude userId from response
+    const { userId, ...approveEmployee } = updatedEmployee._doc;
+    res
+      .status(200)
+      .json({
+        message: "Employee approved",
+        success: true,
+        data: approveEmployee,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
+  }
+};
