@@ -42,3 +42,5 @@ const employeeSchema = mongoose.Schema(
 );
 
 const employeeModel = mongoose.model("Employee", employeeSchema);
+
+export default employeeModel;
