@@ -14,7 +14,7 @@ route.get("/pending", protectRoute, adminMiddleware, listPendingEmployees);
 route.post("/:id/approve", protectRoute, adminMiddleware, approveEmployee);
 
 //Admin-only: Reject/Delete a pending employee
-route.delete("/:id", protectRoute, adminMiddleware, deleteEmployee);
+route.delete("/:id", protectRoute, adminMiddleware, rejectEmployee);
 
 //Admin-only: view approved employees list
 route.get("/", protectRoute, adminMiddleware, listApprovedEmployees);
