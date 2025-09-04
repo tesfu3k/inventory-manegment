@@ -204,3 +204,44 @@ const listApprovedEmployees = async (req, res) => {
     console.log(error.message);
   }
 };
+
+const getEmployeeById = async () => {
+  const employeeId = req.params.id;
+  const userId = req.userId; //via middleware
+
+  try {
+    const requestedUser = await User.findById(userId);
+
+    const employee = await Employee.findById(employeeId);
+    if (!employee)
+      return res
+        .status(404)
+        .json({ message: "Employee not found", success: false, data: null });
+
+    // Check if requester is the employee or an admin
+    if (
+      employee.userId.toString() !== userId.toString() &&
+      requestedUser.role !== "admin"
+    )
+      return res
+        .status(403)
+        .json({ message: "Access denied", success: false, data: null });
+
+    // Exclude userId from response of employee
+
+    const { userId, ...employeeResponse } = employee._doc;
+
+    res
+      .status(200)
+      .json({
+        message: "Employee Retrieved",
+        success: true,
+        data: employeeResponse,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
+  }
+};
