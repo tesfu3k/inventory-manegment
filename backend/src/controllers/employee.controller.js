@@ -139,12 +139,46 @@ const approveEmployee = async (req, res) => {
 
     // Exclude userId from response
     const { userId, ...approveEmployee } = updatedEmployee._doc;
+    res.status(200).json({
+      message: "Employee approved",
+      success: true,
+      data: approveEmployee,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ massage: "internal sever error", success: false, data: null });
+    console.log(error.message);
+  }
+};
+
+const rejectEmployee = async (req, res) => {
+  const employeeId = req.params.id;
+  try {
+    const employee = await Employee.findById({
+      _id: employeeId,
+      pendingApproval: true,
+    });
+
+    if (!employee)
+      return res.status(404).json({
+        message: "Employee not found or already processed",
+        success: true,
+        data: null,
+      });
+
+    const userId = employee.userId;
+
+    await Employee.findByIdAndDelete(employeeId);
+
+    await User.findByIdAndDelete(userId);
+
     res
       .status(200)
       .json({
-        message: "Employee approved",
+        message: "Employee registration rejected",
         success: true,
-        data: approveEmployee,
+        data: null,
       });
   } catch (error) {
     res
