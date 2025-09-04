@@ -66,7 +66,11 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
-    return res.status(400).json({ message: "please enter all requred field" });
+    return res.status(400).json({
+      message: "please enter all requred field",
+      success: false,
+      data: null,
+    });
   if (password.length < 6)
     return res
       .status(400)
@@ -75,17 +79,25 @@ const signIn = async (req, res) => {
   try {
     const user = await userModel.findOne({ email: email });
     if (!user)
-      return res.status(400).json({ message: "incorrect email or password" });
+      return res.status(400).json({
+        message: "incorrect email or password",
+        success: false,
+        data: null,
+      });
 
     const isCorrectPassword = await bcrypt.compare(password, user.password);
     if (!isCorrectPassword)
-      return res.status(400).json({ message: "incorrect email or password" });
+      return res.status(400).json({
+        message: "incorrect email or password",
+        success: false,
+        data: null,
+      });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15d",
     });
 
-    res.cookie(token, "token", {
+    res.cookie("token", token, {
       httpOnly: true,
       maxAge: 15 * 24 * 60 * 60 * 1000, //15d in millisecond
       secure: process.env.STATUS === "production" ? true : false,
@@ -116,7 +128,8 @@ const signOut = (req, res) => {
 const currentUser = async (req, res) => {
   try {
     const { userId } = req;
-    const user = await userModel.findByOne(userId);
+
+    const user = await userModel.findById(userId);
     const { password: _, ...userWithoutPassword } = user._doc;
     res.status(200).json({
       message: "user retrived successfully",
