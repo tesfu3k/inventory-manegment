@@ -1,6 +1,5 @@
 import User from "../models/user.model.js";
 import Employee from "../models/employee.model.js";
-import bcryptjs from "bcryptjs";
 import bcrypt from "bcryptjs";
 
 const registerEmployee = async (req, res) => {
@@ -27,7 +26,8 @@ const registerEmployee = async (req, res) => {
     !department ||
     !position ||
     !phone ||
-    !address
+    !address ||
+    
   )
     return res.status(400).json({
       message: "Please enter all required fields",
@@ -231,17 +231,24 @@ const getEmployeeById = async () => {
 
     const { userId, ...employeeResponse } = employee._doc;
 
-    res
-      .status(200)
-      .json({
-        message: "Employee Retrieved",
-        success: true,
-        data: employeeResponse,
-      });
+    res.status(200).json({
+      message: "Employee Retrieved",
+      success: true,
+      data: employeeResponse,
+    });
   } catch (error) {
     res
       .status(500)
       .json({ massage: "internal sever error", success: false, data: null });
     console.log(error.message);
   }
+};
+
+export {
+  registerEmployee,
+  listApprovedEmployees,
+  approveEmployee,
+  rejectEmployee,
+  listPendingEmployees,
+  getEmployeeById,
 };

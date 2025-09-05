@@ -1,6 +1,14 @@
 import { Router } from "express";
 import { protectRoute } from "../../middlewares/auth.middleware.js";
 import adminMiddleware from "../../middlewares/admin.middleware.js";
+import {
+  approveEmployee,
+  getEmployeeById,
+  listApprovedEmployees,
+  listPendingEmployees,
+  registerEmployee,
+  rejectEmployee,
+} from "../controllers/employee.controller.js";
 
 const route = new Router();
 

@@ -17,7 +17,7 @@ const employeeSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    setData: {
+    startData: {
       type: Date,
       required: true,
     },
