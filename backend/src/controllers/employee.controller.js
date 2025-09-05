@@ -26,8 +26,7 @@ const registerEmployee = async (req, res) => {
     !department ||
     !position ||
     !phone ||
-    !address ||
-    
+    !address
   )
     return res.status(400).json({
       message: "Please enter all required fields",
