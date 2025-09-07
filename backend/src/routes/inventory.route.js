@@ -27,3 +27,10 @@ route.get("/products", protectRoute, adminMiddleware, listProducts);
 route.get("products/:id", protectRoute, adminMiddleware, getProductById);
 route.put("products/:id", protectRoute, adminMiddleware, updateProduct);
 route.delete("/products/:id", protectRoute, adminMiddleware, deleteProduct);
+
+// Purchases routes
+route.post("/purchases", protectRoute, adminMiddleware, addPurchases);
+route.get("/purchases", protectRoute, adminMiddleware, listPurchases);
+route.get("purchases/:id", protectRoute, adminMiddleware, getPurchaseById);
+route.put("purchases/:id", protectRoute, adminMiddleware, updatePurchase);
+route.delete("/purchases/:id", protectRoute, adminMiddleware, deletePurchase);
