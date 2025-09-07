@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import authRoute from "./routes/auth.routes.js";
 import employeesRoute from "./routes/employee.routes.js";
+import inventoryRoute from "./routes/inventory.route.js";
 import cookieParser from "cookie-parser";
 
 import { connectDB } from "../src/config/db.config.js";
@@ -23,8 +24,9 @@ app.get("/api/health", (req, res) => {
 });
 
 //routes
-app.use("/api/employees", employeesRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/employees", employeesRoute);
+app.use("/api/inventory", inventoryRoute);
 
 connectDB();
 app.listen(port, () => {

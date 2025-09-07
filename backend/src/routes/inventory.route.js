@@ -34,3 +34,12 @@ route.get("/purchases", protectRoute, adminMiddleware, listPurchases);
 route.get("purchases/:id", protectRoute, adminMiddleware, getPurchaseById);
 route.put("purchases/:id", protectRoute, adminMiddleware, updatePurchase);
 route.delete("/purchases/:id", protectRoute, adminMiddleware, deletePurchase);
+
+// Sales routes
+route.post("/sales", protectRoute, adminMiddleware, addSales);
+route.get("/sales", protectRoute, adminMiddleware, listSales);
+route.get("sales/:id", protectRoute, adminMiddleware, getSaleById);
+route.put("sales/:id", protectRoute, adminMiddleware, updateSale);
+route.delete("/sales/:id", protectRoute, adminMiddleware, deleteSale);
+
+export default route;
