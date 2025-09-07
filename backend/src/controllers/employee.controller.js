@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+//import User from "../models/user.model.js";
 import employeeModel from "../models/employee.model.js";
 
 const registerEmployee = async (req, res) => {
@@ -61,7 +61,7 @@ const registerEmployee = async (req, res) => {
 
     //create Employee document linked to user
     const newEmployee = await employeeModel.create({
-      userId: User._id,
+      // userId: User._id,
       firstName,
       lastName,
       email,
