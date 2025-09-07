@@ -61,6 +61,12 @@ const listSuppliers = async (req, res) => {
 
 const getSupplierById = async (req, res) => {
   const supplierId = req.params.id;
+  if (!supplierId) {
+    return res.status(400).json({
+      success: false,
+      message: "Supplier ID is required",
+    });
+  }
 
   try {
     const supplier = await supplierModel.findById(supplierId);
@@ -69,13 +75,11 @@ const getSupplierById = async (req, res) => {
       return res
         .status(404)
         .json({ message: "Supplier is not found", success: false, data: null });
-    res
-      .status(200)
-      .json({
-        message: "supplier retrived successfuly",
-        success: true,
-        data: supplier,
-      });
+    res.status(200).json({
+      message: "supplier retrived successfuly",
+      success: true,
+      data: supplier,
+    });
   } catch (error) {
     res
       .status(500)
@@ -84,9 +88,57 @@ const getSupplierById = async (req, res) => {
   }
 };
 
-const updateSupplier = (req, res) => {
-  res.json({ message: "updateSupplier" });
+const updateSupplier = async (req, res) => {
+  const { name, contactEmail, phone, address } = req.body;
+
+  if (!name && !contactEmail && !phone && !address)
+    return res.status(400).json({
+      message: "At least one feild required tobe update",
+      success: false,
+      data: null,
+    });
+
+  const supplierId = req.params.id;
+  if (!supplierId) {
+    return res.status(400).json({
+      success: false,
+      message: "Supplier ID is required",
+    });
+  }
+
+  try {
+    const supplier = await supplierModel.findById(supplierId);
+    if (!supplier)
+      return res
+        .status(404)
+        .json({ message: "supplier is not found", success: false, data: null });
+
+    const updatedSupplier = await supplierModel.findByIdAndUpdate(
+      supplierId,
+      {
+        name,
+        contactEmail,
+        phone,
+        address,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Supplier updated successfully",
+      success: true,
+      data: updatedSupplier,
+    });
+
+    res.status(201);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
+
 const deleteSupplier = (req, res) => {
   res.json({ message: "deleteSupplier" });
 };
