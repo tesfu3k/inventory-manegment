@@ -47,7 +47,7 @@ const listSuppliers = async (req, res) => {
   try {
     const suppliers = await supplierModel.find({});
     res.status(200).json({
-      message: "Suppliers retrived successfuly",
+      message: "Suppliers list retrived successfuly",
       success: true,
       data: suppliers,
     });
@@ -61,9 +61,21 @@ const listSuppliers = async (req, res) => {
 
 const getSupplierById = async (req, res) => {
   const supplierId = req.params.id;
+
   try {
     const supplier = await supplierModel.findById(supplierId);
-    if (!supplier) return res.status(404);
+
+    if (!supplier)
+      return res
+        .status(404)
+        .json({ message: "Supplier is not found", success: false, data: null });
+    res
+      .status(200)
+      .json({
+        message: "supplier retrived successfuly",
+        success: true,
+        data: supplier,
+      });
   } catch (error) {
     res
       .status(500)
