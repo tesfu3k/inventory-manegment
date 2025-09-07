@@ -28,6 +28,6 @@ route.delete("/:id", protectRoute, adminMiddleware, rejectEmployee);
 route.get("/", protectRoute, adminMiddleware, listApprovedEmployees);
 
 // Admin or self: Get specific employee details
-route.get("/:id", protectRoute, getEmployeeById);
+route.get("/:id", protectRoute, adminMiddleware, getEmployeeById);
 
 export default route;
