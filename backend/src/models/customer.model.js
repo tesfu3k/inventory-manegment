@@ -7,7 +7,7 @@ const customerSchema = mongoose.Schema(
       required: true,
     },
     contactEmail: { type: String, required: true, unique: true },
-    phone: string,
+    phone: String,
     address: String,
   },
   { timestamps: true }

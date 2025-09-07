@@ -1,7 +1,34 @@
 import { Router } from "express";
 
-import { protectRoute } from "../../middlewares/auth.middleware";
-import adminMiddleware from "../../middlewares/admin.middleware";
+import { protectRoute } from "../../middlewares/auth.middleware.js";
+import adminMiddleware from "../../middlewares/admin.middleware.js";
+import {
+  addCustomers,
+  addProducts,
+  addPurchases,
+  addSales,
+  addSuppliers,
+  deleteCustomer,
+  deleteProduct,
+  deletePurchase,
+  deleteSale,
+  deleteSupplier,
+  getCustomerById,
+  getProductById,
+  getPurchaseById,
+  getSaleById,
+  getSupplierById,
+  listCustomers,
+  listProducts,
+  listPurchases,
+  listSales,
+  listSuppliers,
+  updateCustomer,
+  updateProduct,
+  updatePurchase,
+  updateSale,
+  updateSupplier,
+} from "../controllers/inventory.controller.js";
 
 const route = new Router();
 
