@@ -39,15 +39,37 @@ const addSuppliers = async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
   }
 };
 
-const listSuppliers = (req, res) => {
-  res.json({ message: "listSuppliers" });
+const listSuppliers = async (req, res) => {
+  try {
+    const suppliers = await supplierModel.find({});
+    res.status(200).json({
+      message: "Suppliers retrived successfuly",
+      success: true,
+      data: suppliers,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
-const getSupplierById = (req, res) => {
-  res.json({ message: "getSupplierById" });
+const getSupplierById = async (req, res) => {
+  const supplierId = req.params.id;
+  try {
+    const supplier = await supplierModel.findById(supplierId);
+    if (!supplier) return res.status(404);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const updateSupplier = (req, res) => {
