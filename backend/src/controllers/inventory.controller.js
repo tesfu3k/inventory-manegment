@@ -99,12 +99,11 @@ const updateSupplier = async (req, res) => {
     });
 
   const supplierId = req.params.id;
-  if (!supplierId) {
+  if (!supplierId)
     return res.status(400).json({
       success: false,
       message: "Supplier ID is required",
     });
-  }
 
   try {
     const supplier = await supplierModel.findById(supplierId);
@@ -139,8 +138,26 @@ const updateSupplier = async (req, res) => {
   }
 };
 
-const deleteSupplier = (req, res) => {
-  res.json({ message: "deleteSupplier" });
+const deleteSupplier = async (req, res) => {
+  const supplierId = req.params.id;
+  if (!supplierId)
+    return res.status(400).json({
+      success: false,
+      message: "Supplier ID is required",
+    });
+  try {
+    await supplierModel.findByIdAndDelete(supplierId);
+    res.status(200).json({
+      message: "supplier deleted successfully",
+      success: true,
+      data: null,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 // Customer Controller

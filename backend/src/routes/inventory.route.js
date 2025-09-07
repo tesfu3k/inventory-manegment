@@ -39,7 +39,7 @@ route.post("/suppliers", protectRoute, adminMiddleware, addSuppliers);
 route.get("/suppliers", protectRoute, adminMiddleware, listSuppliers);
 route.get("/supplier/:id", protectRoute, adminMiddleware, getSupplierById); //getSupplierById
 route.put("/supplier/:id", protectRoute, adminMiddleware, updateSupplier);
-route.delete("/suppliers/:id", protectRoute, adminMiddleware, deleteSupplier);
+route.delete("/supplier/:id", protectRoute, adminMiddleware, deleteSupplier);
 
 // Customers routes
 route.post("/customers", protectRoute, adminMiddleware, addCustomers);
