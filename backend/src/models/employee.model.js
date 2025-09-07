@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 const employeeSchema = mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: true,
-    },
     firstName: String,
     lastName: String,
     email: {
@@ -17,25 +12,21 @@ const employeeSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    startData: {
+    startDate: {
       type: Date,
       required: true,
     },
-    department: {
-      type: String,
-    },
-    position: {
-      type: String,
-    },
-    phone: {
-      type: String,
-    },
-    address: {
-      type: String,
+    department: String,
+    position: String,
+    phone: String,
+    address: String,
+    isActive: {
+      type: Boolean,
+      default: false,
     },
     pendingApproval: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   { timestamps: true }

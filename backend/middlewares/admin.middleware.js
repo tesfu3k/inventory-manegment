@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import user from "../src/models/user.model.js";
+import userModel from "../src/models/user.model.js";
 
 const adminMiddleware = async (req, res, next) => {
   try {
     // req.userId should already be set by protectRoute middleware
-    const user = await user.findById(req.userId);
+    const user = await userModel.findById(req.userId);
 
     if (!user)
       return res
@@ -21,7 +21,7 @@ const adminMiddleware = async (req, res, next) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Server internal error", success: true, data: null });
+      .json({ message: "Server internal error", success: false, data: null });
     console.log(error.message);
   }
 };

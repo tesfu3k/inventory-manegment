@@ -1,13 +1,11 @@
 import User from "../models/user.model.js";
-import Employee from "../models/employee.model.js";
-import bcrypt from "bcryptjs";
+import employeeModel from "../models/employee.model.js";
 
 const registerEmployee = async (req, res) => {
   const {
     firstName,
     lastName,
     email,
-    password,
     salary,
     startDate,
     department,
@@ -20,7 +18,6 @@ const registerEmployee = async (req, res) => {
     !firstName ||
     !lastName ||
     !email ||
-    !password ||
     !salary ||
     !startDate ||
     !department ||
@@ -33,37 +30,37 @@ const registerEmployee = async (req, res) => {
       success: false,
       data: null,
     });
-  if (password.length < 6)
-    return res
-      .status(400)
-      .json({ message: "weak password", success: false, data: null });
+  // if (password.length < 6)
+  //   return res
+  //     .status(400)
+  //     .json({ message: "weak password", success: false, data: null });
 
   try {
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser)
+    const existingEmployee = await Employee.findOne({ email: email });
+    if (existingEmployee)
       return res.status(400).json({
         message: "This email is already registered",
         success: false,
         data: null,
       });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
-    //creat user document
-    const newUser = await User.create({
-      name: `${firstName} ${lastName}`,
-      email,
-      password: hashedPassword,
-      role: "employee",
-      isActive: false,
-    });
+    // //creat Employee document
+    // const newEmployee = await Employee.create({
+    //   name: `${firstName} ${lastName}`,
+    //   email,
+    //   // password: hashedPassword,
+    //   role: "employee",
+    //   isActive: false,
+    // });
 
     // Remove password from user object (so it won’t leak in response)
-    const { password: _, ...userWithoutPassword } = newUser._doc;
+    // const { password: _, ...userWithoutPassword } = newUser._doc;
 
     //create Employee document linked to user
-    const newEmployee = await Employee.create({
+    const newEmployee = await employeeModel.create({
       userId: User._id,
       firstName,
       lastName,
@@ -79,27 +76,28 @@ const registerEmployee = async (req, res) => {
     });
 
     // Prepare employee response without userId
-    const { userId, ...employeeResponse } = newEmployee._doc;
+    // const { userId, ...employeeResponse } = newEmployee._doc;
 
     res.status(201).json({
       message: "Employee registered, awaiting approval",
       success: true,
-      data: employeeResponse,
+      //data: employeeResponse,
+      data: newEmployee,
     });
   } catch (error) {
     res
       .status(500)
       .json({ massage: "internal sever error", success: false, data: null });
-    console.log(error.message);
+    console.log(error.massage);
   }
 };
 
 const listPendingEmployees = async (req, res) => {
   try {
     //to get pending employees, excluding userId.
-    const pendingEmployees = await Employee.find({
+    const pendingEmployees = await employeeModel.find({
       pendingApproval: true,
-    }).select("-userId");
+    });
 
     res.status(200).json({
       message: "Pending employees retrieved",
@@ -110,7 +108,7 @@ const listPendingEmployees = async (req, res) => {
     res
       .status(500)
       .json({ massage: "internal sever error", success: false, data: null });
-    console.log(error.message);
+    console.log(error);
   }
 };
 
@@ -119,10 +117,7 @@ const approveEmployee = async (req, res) => {
 
   try {
     // Find employee only if pendingApproval is true
-    const employee = await Employee.findById({
-      _id: employeeId,
-      pendingApproval: true,
-    });
+    const employee = await employeeModel.findById(employeeId);
 
     if (!employee)
       return res.status(404).json({
@@ -132,16 +127,19 @@ const approveEmployee = async (req, res) => {
       });
 
     //Update linked User
-    const updatedEmployee = await User.findByIdAndUpdate(employee.userId, {
+    await employeeModel.findByIdAndUpdate(employeeId, {
       isActive: true,
+      pendingApproval: false,
     });
 
-    // Exclude userId from response
-    const { userId, ...approveEmployee } = updatedEmployee._doc;
+    // Approved Employee list
+
+    // // Exclude userId from response
+    // const { userId, ...approveEmployee } = updatedEmployee._doc;
     res.status(200).json({
       message: "Employee approved",
       success: true,
-      data: approveEmployee,
+      data: { ...employee._doc, isActive: true, pendingApproval: false },
     });
   } catch (error) {
     res
@@ -154,7 +152,7 @@ const approveEmployee = async (req, res) => {
 const rejectEmployee = async (req, res) => {
   const employeeId = req.params.id;
   try {
-    const employee = await Employee.findById({
+    const employee = await employeeModel.findOne({
       _id: employeeId,
       pendingApproval: true,
     });
@@ -166,11 +164,9 @@ const rejectEmployee = async (req, res) => {
         data: null,
       });
 
-    const userId = employee.userId;
+    // const userId = employee.userId;
 
-    await Employee.findByIdAndDelete(employeeId);
-
-    await User.findByIdAndDelete(userId);
+    await employeeModel.findByIdAndDelete(employeeId);
 
     res.status(200).json({
       message: "Employee registration rejected",
@@ -187,9 +183,10 @@ const rejectEmployee = async (req, res) => {
 
 const listApprovedEmployees = async (req, res) => {
   try {
-    const getApprovedEmployees = await Employee.find({ isActive: true }).select(
-      "-userId"
-    );
+    const getApprovedEmployees = await employeeModel.find({
+      isActive: true,
+      pendingApproval: false,
+    });
 
     res.status(200).json({
       message: "Employees retrieved",
@@ -204,37 +201,19 @@ const listApprovedEmployees = async (req, res) => {
   }
 };
 
-const getEmployeeById = async () => {
+const getEmployeeById = async (req, res) => {
   const employeeId = req.params.id;
-  const userId = req.userId; //via middleware
 
   try {
-    const requestedUser = await User.findById(userId);
-
-    const employee = await Employee.findById(employeeId);
+    const employee = await employeeModel.findById(employeeId);
     if (!employee)
       return res
         .status(404)
         .json({ message: "Employee not found", success: false, data: null });
 
-    // Check if requester is the employee or an admin
-    if (
-      employee.userId.toString() !== userId.toString() &&
-      requestedUser.role !== "admin"
-    )
-      return res
-        .status(403)
-        .json({ message: "Access denied", success: false, data: null });
-
-    // Exclude userId from response of employee
-
-    const { userId, ...employeeResponse } = employee._doc;
-
-    res.status(200).json({
-      message: "Employee Retrieved",
-      success: true,
-      data: employeeResponse,
-    });
+    res
+      .status(200)
+      .json({ message: "Employee Retrieved", success: true, data: employee });
   } catch (error) {
     res
       .status(500)
