@@ -276,13 +276,11 @@ const updateCustomer = async (req, res) => {
       { name, contactEmail, phone, address },
       { new: true }
     );
-    res
-      .status(200)
-      .json({
-        message: "customer information updated successfully",
-        success: true,
-        data: updatedCustomer,
-      });
+    res.status(200).json({
+      message: "customer information updated successfully",
+      success: true,
+      data: updatedCustomer,
+    });
   } catch (error) {
     res
       .status(500)
@@ -290,13 +288,31 @@ const updateCustomer = async (req, res) => {
     console.log(error.message);
   }
 };
-const deleteCustomer = (req, res) => {
-  res.json({ message: "deleteCustomer" });
+const deleteCustomer = async (req, res) => {
+  const { id } = req.params;
+  if (!id)
+    return res.status(400).json({
+      success: false,
+      message: "Customer ID is required",
+    });
+
+  await customerModel.findByIdAndDelete(id);
+  res.status(200).json({
+    message: "customer deleted successfully",
+    success: true,
+    data: null,
+  });
+  try {
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 // Product Controller
-
-const addProducts = (req, res) => {
+const addProducts = async (req, res) => {
   res.json({ message: "addProducts" });
 };
 
