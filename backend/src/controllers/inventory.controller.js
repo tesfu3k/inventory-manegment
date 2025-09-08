@@ -162,12 +162,59 @@ const deleteSupplier = async (req, res) => {
 
 // Customer Controller
 
-const addCustomers = (req, res) => {
-  res.json({ message: "addCustomers" });
+const addCustomers = async (req, res) => {
+  const { name, contactEmail, phone, address } = req.body;
+  if (!contactEmail || !name)
+    return res.status(400).json({
+      message: "Please enter all required fields",
+      success: true,
+      data: null,
+    });
+
+  try {
+    const existingCustomer = await customerModel.findOne({ contactEmail });
+
+    if (existingCustomer)
+      return res.status(409).json({
+        message: "This email is already registered",
+        success: false,
+        data: null,
+      });
+
+    const newCustomer = await customerModel.create({
+      name,
+      contactEmail,
+      phone,
+      address,
+    });
+    res.status(201).json({
+      message: "new customer registered successfully",
+      success: true,
+      data: newCustomer,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
-const listCustomers = (req, res) => {
-  res.json({ message: "listCustomers" });
+const listCustomers = async (req, res) => {
+  try {
+    const customers = await customerModel.find({});
+
+    res.status(200).json({
+      message: "Customers list retrived successfuly",
+      success: true,
+      data: customers,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const getCustomerById = (req, res) => {
