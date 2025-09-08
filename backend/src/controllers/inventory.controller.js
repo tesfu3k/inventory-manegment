@@ -407,18 +407,89 @@ const getProductById = async (req, res) => {
   }
 };
 
-const updateProduct = (req, res) => {
-  res.json({ message: "updateProduct" });
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, unitPrice, description, lowStockThreshed, catagory } = req.body;
+
+  if (!name && !unitPrice && !description && !lowStockThreshed && !catagory)
+    return res.status(400).json({
+      message: "At least one product property is required to update",
+      success: false,
+      data: null,
+    });
+
+  try {
+    const product = await productModel.findById(id);
+
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: "product not found", success: false, data: null });
+
+    //Update only provided fields (not stockQuantity)
+    if (name) product.name = name;
+    if (unitPrice) product.unitPrice = unitPrice;
+    if (description) product.description = description;
+    if (lowStockThreshed) product.lowStockThreshed = lowStockThreshed;
+    if (catagory) product.catagory = catagory;
+
+    // Save changes
+    const updatedProduct = await product.save();
+
+    // const updatedProduct = await productModel.findByIdAndUpdate(
+    //   id,
+    //   { name, unitPrice, description, lowStockThreshed, catagory },
+    //   { new: true }
+    // );
+
+    res.status(200).json({
+      message: "product updated successfully",
+      success: true,
+      data: updatedProduct,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
-const deleteProduct = (req, res) => {
-  res.json({ message: "deleteProduct" });
+
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await productModel.findById(id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: "product not found", success: false, data: null });
+
+    if (product.stockQuantity > 0)
+      return res.status(400).json({
+        message:
+          "Cannot delete product with stock available. Reduce stock to 0 first",
+        success: false,
+        data: null,
+      });
+
+    await productModel.findByIdAndDelete(id);
+    res.status(200).json({
+      message: "product deleted successfully",
+      success: true,
+      data: null,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 // Purchase Controller
 
-const addPurchases = (req, res) => {
-  res.json({ message: "addPurchases" });
-};
+const addPurchases = (req, res) => {};
 
 const listPurchases = (req, res) => {
   res.json({ message: "listPurchases" });
