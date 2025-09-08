@@ -44,22 +44,22 @@ route.delete("/supplier/:id", protectRoute, adminMiddleware, deleteSupplier);
 // Customers routes
 route.post("/customers", protectRoute, adminMiddleware, addCustomers);
 route.get("/customers", protectRoute, adminMiddleware, listCustomers);
-route.get("customer/:id", protectRoute, adminMiddleware, getCustomerById);
-route.put("customer/:id", protectRoute, adminMiddleware, updateCustomer);
+route.get("/customer/:id", protectRoute, adminMiddleware, getCustomerById);
+route.put("/customer/:id", protectRoute, adminMiddleware, updateCustomer);
 route.delete("/customer/:id", protectRoute, adminMiddleware, deleteCustomer);
 
 // Products routes
 route.post("/products", protectRoute, adminMiddleware, addProducts);
 route.get("/products", protectRoute, adminMiddleware, listProducts);
-route.get("product/:id", protectRoute, adminMiddleware, getProductById);
-route.put("product/:id", protectRoute, adminMiddleware, updateProduct);
+route.get("/product/:id", protectRoute, adminMiddleware, getProductById);
+route.put("/product/:id", protectRoute, adminMiddleware, updateProduct);
 route.delete("/product/:id", protectRoute, adminMiddleware, deleteProduct);
 
 // Purchases routes
 route.post("/purchases", protectRoute, adminMiddleware, addPurchases);
 route.get("/purchases", protectRoute, adminMiddleware, listPurchases);
-route.get("purchase/:id", protectRoute, adminMiddleware, getPurchaseById);
-route.put("purchase/:id", protectRoute, adminMiddleware, updatePurchase);
+route.get("/purchase/:id", protectRoute, adminMiddleware, getPurchaseById);
+route.put("/purchase/:id", protectRoute, adminMiddleware, updatePurchase);
 route.delete("/purchase/:id", protectRoute, adminMiddleware, deletePurchase);
 
 // Sales routes

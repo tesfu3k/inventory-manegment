@@ -246,8 +246,49 @@ const getCustomerById = async (req, res) => {
   }
 };
 
-const updateCustomer = (req, res) => {
-  res.json({ message: "updateCustomer" });
+const updateCustomer = async (req, res) => {
+  const { name, contactEmail, phone, address } = req.body;
+  if (!name && !contactEmail && !phone && !address)
+    return res.status(400).json({
+      message:
+        "at least one customer information  required that must be updated ",
+      success: false,
+      data: null,
+    });
+
+  const { id } = req.params;
+  if (!id)
+    return res.status(400).json({
+      success: false,
+      message: "Customer ID is required",
+    });
+  try {
+    const customer = await customerModel.findById(id);
+    if (!customer)
+      return res.status(404).json({
+        message: "coustmer is not found",
+        success: false,
+        data: null,
+      });
+
+    const updatedCustomer = await customerModel.findByIdAndUpdate(
+      id,
+      { name, contactEmail, phone, address },
+      { new: true }
+    );
+    res
+      .status(200)
+      .json({
+        message: "customer information updated successfully",
+        success: true,
+        data: updatedCustomer,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 const deleteCustomer = (req, res) => {
   res.json({ message: "deleteCustomer" });
