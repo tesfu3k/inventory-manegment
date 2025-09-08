@@ -227,13 +227,17 @@ const getCustomerById = async (req, res) => {
   try {
     const customer = await customerModel.findById(id);
     if (!customer)
-      return res
-        .status(404)
-        .json({
-          message: "coustmer is not found",
-          success: false,
-          data: customer,
-        });
+      return res.status(404).json({
+        message: "coustmer is not found",
+        success: false,
+        data: null,
+      });
+
+    res.status(202).json({
+      message: "customer retrived successfully, ",
+      success: true,
+      data: customer,
+    });
   } catch (error) {
     res
       .status(500)
