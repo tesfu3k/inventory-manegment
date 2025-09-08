@@ -288,6 +288,7 @@ const updateCustomer = async (req, res) => {
     console.log(error.message);
   }
 };
+
 const deleteCustomer = async (req, res) => {
   const { id } = req.params;
   if (!id)
@@ -313,11 +314,70 @@ const deleteCustomer = async (req, res) => {
 
 // Product Controller
 const addProducts = async (req, res) => {
-  res.json({ message: "addProducts" });
+  const {
+    name,
+    unitPrice,
+    description,
+    stockQuantity,
+    lowStockThreshed,
+    catagory,
+  } = req.body;
+
+  try {
+    const productExist = await productModel.findOne({ name });
+
+    if (productExist)
+      return res.status(409).json({
+        message: "the product already exist",
+        success: false,
+        data: null,
+      });
+
+    if (unitPrice <= 0)
+      return res.status(400).json({
+        message: "unit price must greater than zero",
+        success: false,
+        data: null,
+      });
+
+    const product = await productModel.create({
+      name,
+      description,
+      unitPrice,
+      catagory,
+      lowStockThreshed: lowStockThreshed || 10,
+      stockQuantity: stockQuantity || 0,
+    });
+
+    res.status(201).json({
+      message: "product added successfully",
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
-const listProducts = (req, res) => {
-  res.json({ message: "listProducts" });
+const listProducts = async (req, res) => {
+  try {
+    const products = await productModel.find({});
+    res
+      .status(200)
+      .json({
+        message: "products are successfully retrived ",
+        success: true,
+        data: products,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const getProductById = (req, res) => {
