@@ -14,6 +14,7 @@ import {
   deleteSale,
   deleteSupplier,
   getCustomerById,
+  getLowStockProducts,
   getProductById,
   getPurchaseById,
   getSaleById,
@@ -54,6 +55,12 @@ route.get("/products", protectRoute, adminMiddleware, listProducts);
 route.get("/product/:id", protectRoute, adminMiddleware, getProductById);
 route.put("/product/:id", protectRoute, adminMiddleware, updateProduct);
 route.delete("/product/:id", protectRoute, adminMiddleware, deleteProduct);
+route.get(
+  "/products/low-stock",
+  protectRoute,
+  adminMiddleware,
+  getLowStockProducts
+);
 
 // Purchases routes
 route.post("/purchases", protectRoute, adminMiddleware, addPurchases);

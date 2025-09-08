@@ -487,6 +487,26 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getLowStockProducts = async (req, res) => {
+  try {
+    // Compare stockQuantity with lowStockThreshed using $expr
+    const lowStockProducts = await productModel.find({
+      $expr: { $lt: ["$stockQuantity", "$lowStockThreshed"] },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Low stock products fetched successfully",
+      data: lowStockProducts,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
+};
+
 // Purchase Controller
 
 const addPurchases = (req, res) => {};
@@ -553,4 +573,5 @@ export {
   deleteProduct,
   deletePurchase,
   deleteSale,
+  getLowStockProducts,
 };
