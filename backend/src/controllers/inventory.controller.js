@@ -365,13 +365,11 @@ const addProducts = async (req, res) => {
 const listProducts = async (req, res) => {
   try {
     const products = await productModel.find({});
-    res
-      .status(200)
-      .json({
-        message: "products are successfully retrived ",
-        success: true,
-        data: products,
-      });
+    res.status(200).json({
+      message: "products are successfully retrived ",
+      success: true,
+      data: products,
+    });
   } catch (error) {
     res
       .status(500)
@@ -380,8 +378,33 @@ const listProducts = async (req, res) => {
   }
 };
 
-const getProductById = (req, res) => {
-  res.json({ message: "getProductById" });
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+  if (!id)
+    return res.status(400).json({
+      success: false,
+      message: "valid product ID is required",
+    });
+
+  try {
+    const product = await productModel.findById(id);
+    if (!product)
+      return res.status(404).json({
+        message: "product is not found",
+        success: true,
+        data: null,
+      });
+    res.status(200).json({
+      message: "product retrived successfully",
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const updateProduct = (req, res) => {
