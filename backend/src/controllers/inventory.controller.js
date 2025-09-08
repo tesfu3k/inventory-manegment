@@ -217,8 +217,29 @@ const listCustomers = async (req, res) => {
   }
 };
 
-const getCustomerById = (req, res) => {
-  res.json({ message: "getCustomerById" });
+const getCustomerById = async (req, res) => {
+  const { id } = req.params;
+  if (!id)
+    return res.status(400).json({
+      success: false,
+      message: "Customer ID is required",
+    });
+  try {
+    const customer = await customerModel.findById(id);
+    if (!customer)
+      return res
+        .status(404)
+        .json({
+          message: "coustmer is not found",
+          success: false,
+          data: customer,
+        });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const updateCustomer = (req, res) => {
