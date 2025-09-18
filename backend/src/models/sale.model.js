@@ -12,11 +12,11 @@ const saleSchema = mongoose.Schema(
     pricePerUnit: { type: Number, required: true },
     totalPrice: Number,
     saleDate: { type: Date, default: Date.now },
-    employeeId: {
-      type: Schema.Types.ObjectId,
-      ref: "Employee",
-      required: true,
-    },
+    // employeeId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Employee",
+    //   required: true,
+    // },
     notes: String,
   },
   { timestamps: true }

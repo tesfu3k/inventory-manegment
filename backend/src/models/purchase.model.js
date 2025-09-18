@@ -19,14 +19,14 @@ const purchaseSchema = mongoose.Schema(
     costPerUnit: { type: Number, required: true },
     totalCost: Number,
     purchaseDate: { type: Date, default: Date.now },
-    employeeId: {
-      type: Schema.Types.ObjectId,
-      ref: "Employee",
-      required: true,
-    },
+    // employeeId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Employee",
+    //   required: true,
+    // },
     notes: String,
   },
-  { timestaps: true }
+  { timestamps: true }
 );
 
 export const purchaseModel = mongoose.model("Purchase", purchaseSchema);

@@ -509,10 +509,95 @@ const getLowStockProducts = async (req, res) => {
 
 // Purchase Controller
 
-const addPurchases = (req, res) => {};
+const addPurchases = async (req, res) => {
+  const { productId, supplierId, quantity, costPerUnit, purchaseDate, notes } =
+    req.body;
 
-const listPurchases = (req, res) => {
-  res.json({ message: "listPurchases" });
+  if (!productId || !supplierId || !quantity || !costPerUnit)
+    return res.status(400).json({
+      message:
+        "Missing required fields: productId, supplierId, costPerUnit and quantity.",
+      success: false,
+      data: null,
+    });
+  if (quantity <= 0)
+    return res.status(422).json({
+      message: "Quantity must be a positive number",
+      success: false,
+      data: null,
+    });
+
+  try {
+    const product = await productModel.findById(productId);
+
+    if (!product)
+      return res
+        .status(422)
+        .json({ message: "Product not found", success: false, data: null });
+
+    const supplierExist = await supplierModel.findById(supplierId);
+
+    if (!supplierExist)
+      return res
+        .status(422)
+        .json({ message: "Supplier not found", success: false, data: null });
+
+    const totalCost = quantity * costPerUnit;
+
+    const newPurchase = await purchaseModel.create({
+      productId,
+      supplierId,
+      quantity,
+      costPerUnit,
+      totalCost, // Include totalCost here,
+      purchaseDate,
+      notes,
+    });
+
+    //Update product stock here in controller
+    product.stockQuantity += quantity;
+
+    //Handle success ---
+
+    return res.status(201).json({
+      message: "Purchase created successfully",
+      success: true,
+      data: newPurchase,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
+};
+
+const listPurchases = async (req, res) => {
+  try {
+    const purchases = await purchaseModel
+      .find({})
+      .populate("productId", "name")
+      .populate("supplierId", "name");
+
+    // Check if any purchases were found
+    if (!purchases || purchases.length === 0)
+      return res.status(200).json({
+        message: "No purchases found.",
+        success: true,
+        data: [],
+      });
+
+    return res.status(200).json({
+      message: "Purchases retrieved successfully.",
+      success: true,
+      data: purchases,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const getPurchaseById = (req, res) => {
