@@ -3,6 +3,7 @@ import { customerModel } from "../models/customer.model.js";
 import { productModel } from "../models/product.model.js";
 import { purchaseModel } from "../models/purchase.model.js";
 import { saleModel } from "../models/sale.model.js";
+import mongoose from "mongoose";
 
 // Supplier Controller
 
@@ -600,8 +601,38 @@ const listPurchases = async (req, res) => {
   }
 };
 
-const getPurchaseById = (req, res) => {
-  res.json({ message: "getPurchaseById" });
+const getPurchaseById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Check if the provided ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).json({
+        message: "Invalid purchase ID format.",
+        success: false,
+        data: null,
+      });
+
+    const purchase = await purchaseModel
+      .findById(id)
+      .populate("productId", "name")
+      .populate("supplierId", "name");
+
+    if (!purchase)
+      return res
+        .status(404)
+        .json({ message: "Purchase not found.", success: false, data: null });
+
+    return res.status(200).json({
+      message: "Purchase retrieved successfully.",
+      success: true,
+      data: purchase,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const updatePurchase = (req, res) => {
