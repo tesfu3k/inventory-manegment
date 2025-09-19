@@ -725,8 +725,36 @@ const updatePurchase = async (req, res) => {
     console.log(error.message);
   }
 };
-const deletePurchase = (req, res) => {
-  res.json({ message: "deletePurchase" });
+const deletePurchase = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({
+      message: "Invalid purchase ID format.",
+      success: false,
+      data: null,
+    });
+  const purchase = await purchaseModel.findByIdAndDelete(id);
+
+  if (!purchase)
+    return res.status(404).json({
+      message: "Purchase not found.",
+      success: false,
+      data: null,
+    });
+
+  // update product stock
+  const product = await productModel.findById(purchase.productId);
+  if (product) {
+    product.stockQuantity -= purchase.quantity;
+    product.save();
+  }
+  // return success deletion response
+
+  return res.status(200).json({
+    message: "purchase deleted succssfully and product stock adjusted",
+    success: true,
+    data: null,
+  });
 };
 
 // Sale Controller
