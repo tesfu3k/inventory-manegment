@@ -635,8 +635,95 @@ const getPurchaseById = async (req, res) => {
   }
 };
 
-const updatePurchase = (req, res) => {
-  res.json({ message: "updatePurchase" });
+const updatePurchase = async (req, res) => {
+  const { id } = req.params;
+  const { productId, supplierId, quantity, costPerUnit, purchaseDate, notes } =
+    req.body;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).json({
+        message: "Invalid purchase ID format.",
+        success: false,
+        data: null,
+      });
+
+    const purchase = await purchaseModel.findById(id);
+    if (!purchase)
+      return res
+        .status(404)
+        .json({ message: "Purchase not found.", success: false, data: null });
+
+    // update Fields
+    const updateFields = {};
+    if (notes) return (updateFields.notes = notes);
+    if (quantity) {
+      if (quantity <= 0)
+        return res.status(422).json({
+          message: "Quantity must be a positive number.",
+          success: false,
+          data: null,
+        });
+      updateFields.quantity = quantity;
+    }
+    if (costPerUnit) {
+      if (costPerUnit < 0)
+        return res.status(422).json({
+          message: "costPerUnit must be a positive number.",
+          success: false,
+          data: null,
+        });
+      updateFields.costPerUnit = costPerUnit;
+    }
+    if (productId) updateFields.productId = productId;
+    if (supplierId) updateFields.supplierId = supplierId;
+    if (purchaseDate) updateFields.purchaseDate = purchaseDate;
+
+    //Adjust product stock if quantity has changed
+    const oldQuantity = purchase.quantity;
+    const newQuantity = updateFields.quantity || oldQuantity;
+
+    const quantityDifference = newQuantity - oldQuantity;
+    if (quantityDifference !== 0) {
+      const product = await productModel.findById(purchase.productId);
+      if (!product)
+        return res.status(404).json({
+          message: "Associated product not found.",
+          success: false,
+          data: null,
+        });
+
+      product.stockQuantity += quantityDifference;
+      await product.save();
+    }
+
+    // Recalculate totalCost if necessary
+    const newCostPerUnit = updateFields.costPerUnit || purchase.costPerUnit;
+    updateFields.totalCost = newCostPerUnit * newQuantity;
+
+    // Update the purchase document
+
+    const updatedPurchase = await purchaseModel.findByIdAndUpdate(
+      id,
+      {
+        $set: updateFields,
+      },
+      { new: true, runValidators: true }
+    );
+
+    //  handle sucess
+
+    return res.status(200).json({
+      message: "Purchase updated successfully.",
+      success: true,
+      data: updatedPurchase,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 const deletePurchase = (req, res) => {
   res.json({ message: "deletePurchase" });
