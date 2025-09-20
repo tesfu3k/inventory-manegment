@@ -900,57 +900,56 @@ const getSaleById = async (req, res) => {
 const updateSale = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({
-      message: "Invalid sale ID format.",
-      success: false,
-      data: null,
-    });
-
-  const { quantity, pricePerUnit, notes } = req.body;
-
-  if (!quantity && !pricePerUnit && !notes)
-    return res.status(400).json({
-      message: "At least one field must be provided",
-      success: false,
-      data: null,
-    });
-
-  if (!sale)
-    return res
-      .status(404)
-      .json({ message: "sale not found", success: false, data: null });
-
-  if (quantity && quantity !== sale.quantity) {
-    const product = await productModel.findById(sale.productId);
-    if (!product)
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).json({
-        message: "Product not found",
+        message: "Invalid sale ID format.",
         success: false,
         data: null,
       });
 
-    product.stockQuantity -= quantity;
-    await product.save();
+    const { quantity, pricePerUnit, notes } = req.body;
 
-    sale.quantity = quantity;
-  }
+    if (!quantity && !pricePerUnit && !notes)
+      return res.status(400).json({
+        message: "At least one field must be provided",
+        success: false,
+        data: null,
+      });
 
-  if (pricePerUnit) sale.pricePerUnit = pricePerUnit;
-  if (notes) sale.notes = notes;
+    if (!sale)
+      return res
+        .status(404)
+        .json({ message: "sale not found", success: false, data: null });
 
-  // recalculate total price
+    if (quantity && quantity !== sale.quantity) {
+      const product = await productModel.findById(sale.productId);
+      if (!product)
+        return res.status(404).json({
+          message: "Product not found",
+          success: false,
+          data: null,
+        });
 
-  sale.totalPrice = sale.pricePerUnit * sale.quantity;
+      product.stockQuantity -= quantity;
+      await product.save();
 
-  await sale.save();
-  return res.status(200).json({
-    message: "Sale updated successfully and stock adjusted",
-    success: true,
-    data: sale,
-  });
+      sale.quantity = quantity;
+    }
 
-  try {
+    if (pricePerUnit) sale.pricePerUnit = pricePerUnit;
+    if (notes) sale.notes = notes;
+
+    // recalculate total price
+
+    sale.totalPrice = sale.pricePerUnit * sale.quantity;
+
+    await sale.save();
+    return res.status(200).json({
+      message: "Sale updated successfully and stock adjusted",
+      success: true,
+      data: sale,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error updating sales",
@@ -960,8 +959,40 @@ const updateSale = async (req, res) => {
   }
 };
 
-const deleteSale = (req, res) => {
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({
+      message: "Invalid sale ID format.",
+      success: false,
+      data: null,
+    });
+
   try {
+    const sale = await saleModel.findById(id);
+    if (!sale)
+      return res.status(404).json({
+        message: "Sale not found",
+        success: false,
+        data: null,
+      });
+
+    // restore product stock
+    const product = await productModel.findById(sale.productId);
+    if (product) {
+      product.stockQuantity += sale.quantity;
+      await product.save();
+    }
+
+    // Delete the sale
+    await saleModel.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Sale deleted successfully and stock restored",
+      success: true,
+      data: null,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error in sale delition",
