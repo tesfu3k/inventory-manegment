@@ -829,8 +829,31 @@ const addSales = async (req, res) => {
   }
 };
 
-const listSales = (req, res) => {
-  res.json({ message: "listSales" });
+const listSales = async (req, res) => {
+  try {
+    const sales = await saleModel
+      .find({})
+      .populate("productId", "name")
+      .populate("CustomerId", "name");
+
+    // Check if any sales were found
+    if (!sales || sales.length === 0)
+      return res
+        .status(200)
+        .json({ message: "no sales found", success: true, data: [] });
+
+    return res.status(200).json({
+      message: "Sales fached successfully",
+      sucess: true,
+      data: sales,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching sales",
+      success: false,
+      error: error.message,
+    });
+  }
 };
 
 const getSaleById = (req, res) => {
