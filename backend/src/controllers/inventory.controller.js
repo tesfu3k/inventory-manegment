@@ -759,8 +759,74 @@ const deletePurchase = async (req, res) => {
 
 // Sale Controller
 
-const addSales = (req, res) => {
-  res.json({ message: "addSales" });
+const addSales = async (req, res) => {
+  const { productId, customerId, quantity, pricePerUnit, saleDate, note } =
+    req.body;
+
+  if (!productId || !customerId || !quantity || !pricePerUnit)
+    return res.status(400).json({
+      message:
+        "Missing required fields: productId, customerId, pricePerUnit and quantity.",
+      success: false,
+      data: null,
+    });
+
+  if (quantity <= 0)
+    return res.status(400).json({
+      message: "Quantity must be greater than zero",
+      success: false,
+      data: null,
+    });
+
+  if (pricePerUnit <= 0)
+    return res.status(400).json({
+      message: "PricePerUnit must be greater than zero",
+      success: false,
+      data: null,
+    });
+  try {
+    const product = await productModel.findById(productId);
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: "product not found", success: false, data: null });
+
+    const customer = await customerModel.findById(customerId);
+    if (!customer)
+      return res
+        .status(404)
+        .json({ message: "customer not found", success: false, data: null });
+    if (product.stockQuantity < quantity)
+      return res.status(400).json({
+        message: "Not enough stock available for this product.",
+        success: false,
+        data: null,
+      });
+
+    // Decrement the stock of the product
+    product.stockQuantity -= quantity;
+    await product.save();
+
+    const sale = await saleModel.create({
+      productId,
+      customerId,
+      quantity,
+      pricePerUnit,
+      note,
+      saleDate,
+    });
+
+    return res.status(201).json({
+      message: "Sale created successfully and product stock updated",
+      success: true,
+      data: sale,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", success: false, data: null });
+    console.log(error.message);
+  }
 };
 
 const listSales = (req, res) => {
