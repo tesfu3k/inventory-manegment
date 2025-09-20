@@ -640,6 +640,13 @@ const updatePurchase = async (req, res) => {
   const { productId, supplierId, quantity, costPerUnit, purchaseDate, notes } =
     req.body;
 
+  if (!quantity && !costPerUnit && !notes && !purchaseDate)
+    return res.status(400).json({
+      message: "At least one required field must be provided",
+      success: false,
+      data: null,
+    });
+
   try {
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).json({
@@ -856,15 +863,112 @@ const listSales = async (req, res) => {
   }
 };
 
-const getSaleById = (req, res) => {
-  res.json({ message: "getSaleById" });
+const getSaleById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).json({
+        message: "Invalid sale ID format.",
+        success: false,
+        data: null,
+      });
+
+    const sale = await saleModel
+      .findById(id)
+      .populate("productId", "name")
+      .populate("customerId", "name");
+    if (!sale)
+      return res
+        .status(404)
+        .json({ message: "sale not found", success: true, data: null });
+
+    return res.status(200).json({
+      message: "Sale fetched successfully",
+      success: true,
+      data: sale,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error getting sales by Id",
+      success: false,
+      error: error.message,
+    });
+  }
 };
 
-const updateSale = (req, res) => {
-  res.json({ message: "updateSale" });
+const updateSale = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({
+      message: "Invalid sale ID format.",
+      success: false,
+      data: null,
+    });
+
+  const { quantity, pricePerUnit, notes } = req.body;
+
+  if (!quantity && !pricePerUnit && !notes)
+    return res.status(400).json({
+      message: "At least one field must be provided",
+      success: false,
+      data: null,
+    });
+
+  if (!sale)
+    return res
+      .status(404)
+      .json({ message: "sale not found", success: false, data: null });
+
+  if (quantity && quantity !== sale.quantity) {
+    const product = await productModel.findById(sale.productId);
+    if (!product)
+      return res.status(404).json({
+        message: "Product not found",
+        success: false,
+        data: null,
+      });
+
+    product.stockQuantity -= quantity;
+    await product.save();
+
+    sale.quantity = quantity;
+  }
+
+  if (pricePerUnit) sale.pricePerUnit = pricePerUnit;
+  if (notes) sale.notes = notes;
+
+  // recalculate total price
+
+  sale.totalPrice = sale.pricePerUnit * sale.quantity;
+
+  await sale.save();
+  return res.status(200).json({
+    message: "Sale updated successfully and stock adjusted",
+    success: true,
+    data: sale,
+  });
+
+  try {
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating sales",
+      success: false,
+      error: error.message,
+    });
+  }
 };
+
 const deleteSale = (req, res) => {
-  res.json({ message: "deleteSale" });
+  try {
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in sale delition",
+      success: false,
+      error: error.message,
+    });
+  }
 };
 
 export {
