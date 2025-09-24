@@ -13,7 +13,6 @@ const registerEmployee = async (req, res) => {
     phone,
     address,
   } = req.body;
-
   if (
     !firstName ||
     !lastName ||
@@ -36,7 +35,7 @@ const registerEmployee = async (req, res) => {
   //     .json({ message: "weak password", success: false, data: null });
 
   try {
-    const existingEmployee = await Employee.findOne({ email: email });
+    const existingEmployee = await employeeModel.findOne({ email: email });
     if (existingEmployee)
       return res.status(400).json({
         message: "This email is already registered",
@@ -88,7 +87,7 @@ const registerEmployee = async (req, res) => {
     res
       .status(500)
       .json({ massage: "internal sever error", success: false, data: null });
-    console.log(error.massage);
+    console.log(error);
   }
 };
 
