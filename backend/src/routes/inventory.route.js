@@ -72,8 +72,8 @@ route.delete("/purchase/:id", protectRoute, adminMiddleware, deletePurchase);
 // Sales routes
 route.post("/sales", protectRoute, adminMiddleware, addSales);
 route.get("/sales", protectRoute, adminMiddleware, listSales);
-route.get("sale/:id", protectRoute, adminMiddleware, getSaleById);
-route.put("sale/:id", protectRoute, adminMiddleware, updateSale);
+route.get("/sale/:id", protectRoute, adminMiddleware, getSaleById);
+route.put("/sale/:id", protectRoute, adminMiddleware, updateSale);
 route.delete("/sale/:id", protectRoute, adminMiddleware, deleteSale);
 
 export default route;

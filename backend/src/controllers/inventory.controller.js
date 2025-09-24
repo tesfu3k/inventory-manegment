@@ -841,7 +841,7 @@ const listSales = async (req, res) => {
     const sales = await saleModel
       .find({})
       .populate("productId", "name")
-      .populate("CustomerId", "name");
+      .populate("customerId", "name");
 
     // Check if any sales were found
     if (!sales || sales.length === 0)
@@ -917,6 +917,8 @@ const updateSale = async (req, res) => {
         data: null,
       });
 
+    const sale = await saleModel.findById(id);
+
     if (!sale)
       return res
         .status(404)
@@ -978,15 +980,15 @@ const deleteSale = async (req, res) => {
         data: null,
       });
 
+    // Delete the sale
+    await saleModel.findByIdAndDelete(id);
+
     // restore product stock
     const product = await productModel.findById(sale.productId);
     if (product) {
       product.stockQuantity += sale.quantity;
       await product.save();
     }
-
-    // Delete the sale
-    await saleModel.findByIdAndDelete(id);
 
     return res.status(200).json({
       message: "Sale deleted successfully and stock restored",
