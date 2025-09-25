@@ -6,7 +6,7 @@ import {
   signOut,
   signUp,
 } from "../controllers/auth.controllers.js";
-import { protectRoute } from "../../middlewares/auth.middleware.js";
+import { protectRoute } from "../middlewares/auth.middleware.js";
 
 route.post("/sign-up", signUp);
 route.post("/sign-in", signIn);

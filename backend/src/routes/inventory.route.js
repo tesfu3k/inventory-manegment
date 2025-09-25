@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { protectRoute } from "../../middlewares/auth.middleware.js";
-import adminMiddleware from "../../middlewares/admin.middleware.js";
+import { protectRoute } from "../middlewares/auth.middleware.js";
+import adminMiddleware from "../middlewares/admin.middleware.js";
 import {
   addCustomers,
   addProducts,
