@@ -1,11 +1,44 @@
+import axios from "axios";
 import { Mail, LockKeyhole } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const LogIn = () => {
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setLoginData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    if (!loginData.email || !loginData.password)
+      return toast.error("nter all reqired data");
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/auth/sign-in",
+        loginData,
+        { validateStatus: (status) => status < 500, withCredentials: true }
+      );
+      console.log(data);
+    } catch (error) {
+      toast.error(
+        error.message || "Something went wrong. Please try again later"
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen text-white flex items-center justify-center bg-[url('/bg.jpg')] bg-no-repeat bg-center bg-cover">
       <div className="relative w-full max-w-sm rounded-2xl bg-gradient-to-tl from-white/30 via-transparent to-white/30 backdrop-blur-xl border-[rgba(255,255,255,0.5)] border-2 p-8 shadow-xl">
-        <form noValidate>
+        <form onSubmit={handleOnSubmit}>
           <h1 className="mb-6 text-center text-2xl font-semibold">Login</h1>
 
           {/* Email */}
@@ -18,9 +51,11 @@ const LogIn = () => {
               id="email"
               name="email"
               type="email"
+              value={loginData.email}
+              onChange={handOnChange}
               required
               autoComplete="email"
-              placeholder=" "
+              placeholder=""
               className="peer w-full rounded-md bg-transparent px-3 pr-10 pb-2 pt-5 text-base outline-none ring-1 ring-white/60 transition focus:ring-2 focus:ring-white/90"
             />
 
@@ -45,9 +80,11 @@ const LogIn = () => {
               id="password"
               name="password"
               type="password"
+              value={loginData.password}
+              onChange={handOnChange}
               required
               autoComplete="current-password"
-              placeholder=" "
+              placeholder=""
               className="peer w-full rounded-md bg-transparent px-3 pr-10 pb-2 pt-5 text-base outline-none ring-1 ring-white/60 transition focus:ring-2 focus:ring-white/90"
             />
 
