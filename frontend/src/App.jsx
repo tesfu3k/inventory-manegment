@@ -9,6 +9,7 @@ import PublicLayout from "./layout/PublicLayout";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./context/contextCreator";
+import Employees from "./pages/Employees";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
@@ -39,6 +40,7 @@ const App = () => {
       </Route>
       <Route path="/" element={<AuthLayout />}>
         <Route index element={<DashBoard />} />
+        <Route path="employees" element={<Employees />} />
       </Route>
     </Routes>
   );
