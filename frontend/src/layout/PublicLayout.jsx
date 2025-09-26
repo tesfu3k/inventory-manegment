@@ -8,7 +8,6 @@ const PublicLayout = () => {
 
   return (
     <div>
-      PublicLayout
       <Outlet />
     </div>
   );

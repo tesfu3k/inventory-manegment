@@ -6,12 +6,13 @@ import DashBoard from "./pages/DashBoard";
 
 import AuthLayout from "./layout/AuthLayout";
 import PublicLayout from "./layout/PublicLayout";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./context/contextCreator";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fatchUser = async () => {
       try {
@@ -21,12 +22,15 @@ const App = () => {
         if (data.success) setUser(data.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fatchUser();
   }, []);
 
+  if (isLoading) return <h1>Loading...</h1>;
   return (
     <Routes>
       <Route path="/" element={<PublicLayout />}>

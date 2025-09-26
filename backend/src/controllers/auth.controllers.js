@@ -121,7 +121,7 @@ const signIn = async (req, res) => {
 
 const signOut = (req, res) => {
   res
-    .clearCookie("token")
+    .clearCookie("token", { httpOnly: true })
     .status(200)
     .json({ message: "sign out successfully", success: true, data: null });
 };

@@ -1,5 +1,11 @@
+import LogOut from "../components/LogOut";
+
 const DashBoard = () => {
-  return <div>Main DashBoard</div>;
+  return (
+    <div>
+      <LogOut />
+    </div>
+  );
 };
 
 export default DashBoard;

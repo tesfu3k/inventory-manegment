@@ -10,7 +10,7 @@ import { protectRoute } from "../middlewares/auth.middleware.js";
 
 route.post("/sign-up", signUp);
 route.post("/sign-in", signIn);
-route.get("/sign-out", signOut);
+route.post("/sign-out", signOut);
 route.get("/me", protectRoute, currentUser);
 
 export default route;

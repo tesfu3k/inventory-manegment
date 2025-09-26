@@ -33,6 +33,7 @@ const LogIn = () => {
         setUser(data.data.user);
         return toast.success(data.message);
       }
+      if (!data.success) return toast.error(data.message);
     } catch (error) {
       toast.error(
         error.message || "Something went wrong. Please try again later"
