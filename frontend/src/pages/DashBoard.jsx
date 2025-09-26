@@ -1,11 +1,8 @@
 import LogOut from "../components/LogOut";
+import SideBar from "../components/SideBar";
 
 const DashBoard = () => {
-  return (
-    <div>
-      <LogOut />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default DashBoard;
