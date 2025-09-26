@@ -1,10 +1,12 @@
 import axios from "axios";
 import { Mail, LockKeyhole } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { useContext, useState } from "react";
+import toast, { ToastBar } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/contextCreator";
 
 const LogIn = () => {
+  const { setUser } = useContext(AuthContext);
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -27,7 +29,10 @@ const LogIn = () => {
         loginData,
         { validateStatus: (status) => status < 500, withCredentials: true }
       );
-      console.log(data);
+      if (data.success) {
+        setUser(data.data.user);
+        return toast.success(data.message);
+      }
     } catch (error) {
       toast.error(
         error.message || "Something went wrong. Please try again later"
