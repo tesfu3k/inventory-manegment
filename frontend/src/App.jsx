@@ -10,6 +10,11 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./context/contextCreator";
 import Employees from "./pages/Employees";
+import Products from "./pages/Products";
+import Purchases from "./pages/Purchases";
+import Sales from "./pages/Sales";
+import Customers from "./pages/Customers";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
@@ -41,6 +46,11 @@ const App = () => {
       <Route path="/" element={<AuthLayout />}>
         <Route index element={<DashBoard />} />
         <Route path="employees" element={<Employees />} />
+        <Route path="products" element={<Products />} />
+        <Route path="purchases" element={<Purchases />} />
+        <Route path="sales" element={<Sales />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

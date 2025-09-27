@@ -30,10 +30,11 @@ const LogOut = () => {
 
   return (
     <button
-      className="flex gap-4 px-3 py-2 border-none rounded-md text-red-600 font-bold cursor-pointer hover:bg-red-600/20 active:scale-95 w-full"
+      className="flex gap-4 px-3 py-2 border-none rounded-md text-red-600 font-bold cursor-pointer hover:bg-red-600/20 active:scale-95 md:w-full"
       onClick={handleLogOut}
     >
-      <SignOutIcon /> LogOut
+      <SignOutIcon />
+      <span className="max-md:hidden">Log out</span>
     </button>
   );
 };
