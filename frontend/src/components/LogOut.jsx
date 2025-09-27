@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { LogOut as SignOutIcon } from "lucide-react";
 
-const LogOut = () => {
+const LogOut = ({ collapsed }) => {
   const { setUser } = useContext(AuthContext);
 
   const handleLogOut = async () => {
@@ -34,7 +34,7 @@ const LogOut = () => {
       onClick={handleLogOut}
     >
       <SignOutIcon />
-      <span className="max-md:hidden">Log out</span>
+      {!collapsed && <span className="max-md:hidden">Log out</span>}
     </button>
   );
 };

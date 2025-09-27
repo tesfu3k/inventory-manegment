@@ -9,6 +9,7 @@ import {
   ShoppingCart, // Today Sales
   ClipboardList, // Today Purchases
 } from "lucide-react";
+import SaleVsPurchase from "../components/SaleVsPurchase";
 
 const DashboardStats = [
   { id: 1, icons: UserCog, title: "Total Employees", value: "0" },
@@ -23,6 +24,7 @@ const DashBoard = () => {
   return (
     <div className="px-10">
       <DashboardNavBar />
+
       {/* <DashboardBody /> */}
       <div className="grid grid-cols-3 gap-3 max-md:grid-cols-2 xl:gap-6 2xl:grid-cols-6">
         {DashboardStats.map((card) => (
@@ -33,6 +35,9 @@ const DashBoard = () => {
             title={card.title}
           />
         ))}
+      </div>
+      <div className="my-4">
+        <SaleVsPurchase />
       </div>
     </div>
   );

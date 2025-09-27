@@ -5,7 +5,7 @@ import { Smile } from "lucide-react";
 const DashboardNavBar = () => {
   const { user } = useContext(AuthContext);
   return (
-    <div className="text-cyan-800 flex justify-between py-5 max-md:flex-col max-md:gap-4">
+    <div className="text-cyan-800 flex justify-between py-5 max-md:flex-col max-md:gap-4 sticky top-0 bg-[rgb(230,248,252)]">
       <div>
         <div className="flex gap-3 items-center ">
           <h1 className="text-3xl font-semibold max-md:text-lg">
