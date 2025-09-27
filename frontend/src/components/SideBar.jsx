@@ -76,6 +76,7 @@ const SideBar = () => {
                   isActive ? "bg-cyan-500/10" : ""
                 }`
               }
+              title={link.label} // used to creat tooltip
             >
               <link.icons className="size-5" />
               <span className="max-md:hidden">{link.label}</span>
@@ -90,7 +91,7 @@ const SideBar = () => {
             <span className="max-md:hidden -mb-1.5 text-md font-semibold">
               {user.name}
             </span>
-            <span className="max-md: hidden text-sm opacity-80">
+            <span className="max-md:hidden text-sm opacity-80">
               {user.role}
             </span>
           </div>
