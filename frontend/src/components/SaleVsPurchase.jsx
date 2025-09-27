@@ -28,7 +28,7 @@ const data = [
 
 const SaleVsPurchase = () => {
   return (
-    <div className="w-full h-80 rounded-xl bg-white p-4 shadow-sm">
+    <div className="w-full min-h-80 rounded-xl bg-white p-4 shadow-sm">
       <div className="mb-2 flex items-baseline justify-between">
         <h3 className="text-sm font-semibold">Sales vs Purchases</h3>
         <span className="text-xs text-gray-500">Amounts (ETB)</span>

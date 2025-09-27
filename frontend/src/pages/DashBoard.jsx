@@ -10,6 +10,7 @@ import {
   ClipboardList, // Today Purchases
 } from "lucide-react";
 import SaleVsPurchase from "../components/SaleVsPurchase";
+import QuickActions from "../components/QuickActions";
 
 const DashboardStats = [
   { id: 1, icons: UserCog, title: "Total Employees", value: "0" },
@@ -36,8 +37,9 @@ const DashBoard = () => {
           />
         ))}
       </div>
-      <div className="my-4">
+      <div className="my-4 grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-4">
         <SaleVsPurchase />
+        <QuickActions />
       </div>
     </div>
   );
