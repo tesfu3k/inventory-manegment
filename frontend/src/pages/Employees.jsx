@@ -1,5 +1,11 @@
+import EmployeeNavBar from "../components/EmployeeNavBar";
+
 const Employees = () => {
-  return <div>Employees</div>;
+  return (
+    <div className="px-10">
+      <EmployeeNavBar />
+    </div>
+  );
 };
 
 export default Employees;
