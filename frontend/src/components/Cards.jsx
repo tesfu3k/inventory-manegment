@@ -1,4 +1,4 @@
-const Cards = ({ title, icons, value }) => {
+const Cards = ({ title, icons, value, per }) => {
   const Icon = icons;
   return (
     <div className=" border-gray-700 bg-white flex items-center h-25 gap-4 text-cyan-800 rounded-2xl pl-6 py-4">
@@ -7,7 +7,9 @@ const Cards = ({ title, icons, value }) => {
       </div>
       <div className="">
         <h6 className="font-semibold">{title}</h6>
-        <h1 className="text-4xl font-bold">{value}</h1>
+        <h1 className="text-4xl font-bold">
+          {value} {per && <span className="text-sm font-md">{per}</span>}
+        </h1>
       </div>
     </div>
   );

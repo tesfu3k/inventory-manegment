@@ -27,7 +27,7 @@ const DashBoard = () => {
       <DashboardNavBar />
 
       {/* <DashboardBody /> */}
-      <div className="grid grid-cols-3 gap-3 max-md:grid-cols-2 xl:gap-6 2xl:grid-cols-6">
+      <div className="grid grid-cols-3 gap-3 max-sm:grid-cols-1 max-md:grid-cols-2 xl:gap-6 2xl:grid-cols-6">
         {DashboardStats.map((card) => (
           <Cards
             key={card.id}
