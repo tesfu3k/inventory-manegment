@@ -2,6 +2,7 @@ import Cards from "../components/Cards";
 import EmployeeNavBar from "../components/EmployeeNavBar";
 import { UserCog, Clock, UserCheck, UserPlus } from "lucide-react";
 import EmployeeSearchBar from "../components/EmployeeSearchBar";
+import EmployeeTable from "../components/EmployeeTable";
 
 const employeeStatus = [
   {
@@ -47,6 +48,8 @@ const Employees = () => {
         ))}
       </div>
       <EmployeeSearchBar />
+      <EmployeeTable />
+      {/* <img src="/Portrait_Placeholder.png" alt="Logo" /> */}
     </div>
   );
 };
