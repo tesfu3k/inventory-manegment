@@ -1,61 +1,109 @@
 import { Edit, Eye, Trash2 } from "lucide-react";
 
+const columns = [
+  {
+    key: "select",
+    label: "",
+    className: "px-6 py-4 text-left font-medium uppercase tracking-wider",
+  }, // for checkbox column
+  {
+    key: "employee",
+    label: "Employee",
+    className: "px-6 py-4 text-left font-medium uppercase tracking-wider",
+  },
+  {
+    key: "position",
+    label: "Position",
+    className:
+      " px-6 py-4 text-left font-medium uppercase tracking-wider hidden md:table-cell ",
+  },
+  {
+    key: "department",
+    label: "Department",
+    className:
+      "px-6 py-4 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
+  },
+  {
+    key: "contact",
+    label: "Contact",
+    className:
+      "px-6 py-4 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
+  },
+  {
+    key: "salary",
+    label: "Salary",
+    className:
+      "px-6 py-4 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+  },
+  {
+    key: "status",
+    label: "Status",
+    className:
+      "px-6 py-4 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
+  },
+  {
+    key: "actions",
+    label: "Actions",
+    className: "px-6 py-4 text-left font-medium uppercase tracking-wider",
+  },
+];
+
 const employeeData = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Abebe Bekele",
     position: "Senior Developer",
     department: "Engineering",
-    phone: "+1 (555) 123-4567",
-    email: "sarah.johnson@company.com",
-    salary: 95000,
+    phone: "+251 911 123 456",
+    email: "abebe.bekele@company.et",
+    salary: 95000, // in ETB
     status: "Active",
     avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 2,
-    name: "Michael Chen",
+    name: "Mekdes Alemu",
     position: "Product Manager",
     department: "Product",
-    phone: "+1 (555) 234-5678",
-    email: "michael.chen@company.com",
+    phone: "+251 922 234 567",
+    email: "mekdes.alemu@company.et",
     salary: 110000,
     status: "Active",
     avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 3,
-    name: "Emily Rodriguez",
+    name: "Samuel Tadesse",
     position: "UX Designer",
     department: "Design",
-    phone: "+1 (555) 345-6789",
-    email: "emily.rodriguez@company.com",
+    phone: "+251 933 345 678",
+    email: "samuel.tadesse@company.et",
     salary: 78000,
     status: "Active",
     avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1628157588553-5eeea00af15f?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 4,
-    name: "David Williams",
+    name: "Hanna Getachew",
     position: "DevOps Engineer",
     department: "Engineering",
-    phone: "+1 (555) 456-7890",
-    email: "david.williams@company.com",
+    phone: "+251 944 456 789",
+    email: "hanna.getachew@company.et",
     salary: 88000,
     status: "Inactive",
     avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 5,
-    name: "Jessica Brown",
+    name: "Saron Fikre",
     position: "HR Manager",
     department: "Human Resources",
-    phone: "+1 (555) 567-8901",
-    email: "jessica.brown@company.com",
+    phone: "+251 955 567 890",
+    email: "saron.fikre@company.et",
     salary: 85000,
     status: "Active",
     avatar:
@@ -63,11 +111,11 @@ const employeeData = [
   },
   {
     id: 6,
-    name: "Robert Kim",
+    name: "Yonas Gebremariam",
     position: "Marketing Specialist",
     department: "Marketing",
-    phone: "+1 (555) 678-9012",
-    email: "robert.kim@company.com",
+    phone: "+251 966 678 901",
+    email: "yonas.gebremariam@company.et",
     salary: 65000,
     status: "Active",
     avatar:
@@ -75,11 +123,11 @@ const employeeData = [
   },
   {
     id: 7,
-    name: "Lisa Thompson",
+    name: "Selamawit Dawit",
     position: "Finance Director",
     department: "Finance",
-    phone: "+1 (555) 789-0123",
-    email: "lisa.thompson@company.com",
+    phone: "+251 977 789 012",
+    email: "selamawit.dawit@company.et",
     salary: 125000,
     status: "Active",
     avatar:
@@ -87,15 +135,15 @@ const employeeData = [
   },
   {
     id: 8,
-    name: "Alex Turner",
+    name: "Bereket Tesfaye",
     position: "Junior Developer",
     department: "Engineering",
-    phone: "+1 (555) 890-1234",
-    email: "alex.turner@company.com",
+    phone: "+251 988 890 123",
+    email: "bereket.tesfaye@company.et",
     salary: 70000,
     status: "Active",
     avatar:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150&h=150&fit=crop&crop=face",
   },
 ];
 
@@ -104,34 +152,20 @@ const EmployeeTable = () => {
     <div className="bg-white rounded-2xl shadow-sm border-gray-200 overflow-hidden mt-5">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50 border-b border-gray-200 ">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                <input type="checkbox" />
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Employee
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Position
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Department
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Contact
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Salary
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Status
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider ">
-                Actions
-              </th>
+              {columns.map((column) => (
+                <td className={column.className}>
+                  {column.key === "select" ? (
+                    <input type="checkbox" />
+                  ) : (
+                    column.label
+                  )}
+                </td>
+              ))}
             </tr>
           </thead>
+
           <tbody className="bg-white divide-y divide-gray-200">
             {employeeData.map((employee) => (
               <tr key={employee.id}>
@@ -158,30 +192,30 @@ const EmployeeTable = () => {
                 </td>
 
                 {/* position */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                   <div className="text-sm font-medium">{employee.position}</div>
                 </td>
 
                 {/* Department */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                   <div className="text-sm">{employee.department}</div>
                 </td>
 
                 {/* Contact */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                   <div className="text-sm">{employee.phone}</div>
                   <div className="text-sm text-cyan-500">{employee.email}</div>
                 </td>
 
                 {/* Salary */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
                   <div className="text-sm font-medium">
                     {employee.salary} ETB
                   </div>
                 </td>
 
                 {/* status */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       employee.status === "Active"
