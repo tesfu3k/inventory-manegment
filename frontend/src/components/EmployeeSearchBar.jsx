@@ -6,7 +6,7 @@ const EmployeeSearchBar = () => {
       <Search className="absolute top-7 left-10 " />
       <input
         className=" border rounded-lg p-2 pl-8 flex-1"
-        type="text"
+        type="search"
         placeholder="Search by name or phone number email"
       />
       <div className="flex gap-4">
