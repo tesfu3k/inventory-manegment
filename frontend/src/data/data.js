@@ -352,7 +352,7 @@ export const purchaseColumns = [
     key: "supplier",
     label: "Supplier",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider max-w-[18ch] truncate",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider whitespace-nowrap",
   },
 
   // md+
@@ -360,15 +360,7 @@ export const purchaseColumns = [
     key: "products",
     label: "Product(s)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell max-w-[24ch] truncate",
-  },
-
-  // lg+
-  {
-    key: "employee",
-    label: "Employee",
-    className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell max-w-[16ch] truncate",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell whitespace-nowrap",
   },
 
   // xl+
@@ -376,13 +368,13 @@ export const purchaseColumns = [
     key: "quantity",
     label: "Qty",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell text-right w-16",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell whitespace-nowrap",
   },
   {
     key: "total",
     label: "Total (ETB)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell text-right whitespace-nowrap",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell whitespace-nowrap",
   },
 
   // 2xl+
@@ -396,7 +388,7 @@ export const purchaseColumns = [
     key: "status",
     label: "Status",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell whitespace-nowrap",
   },
 
   // always on
@@ -404,7 +396,7 @@ export const purchaseColumns = [
     key: "actions",
     label: "Actions",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider w-[100px]",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider whitespace-nowrap",
   },
 ];
 
@@ -414,7 +406,6 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0001",
     supplier: "Addis Tech Supplies",
     products: "3 items (Laptop x2, Mouse x1)",
-    employee: "Abebe Bekele",
     quantity: 3,
     total: 158000, // ETB
     date: "2025-09-27",
@@ -425,7 +416,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0002",
     supplier: "Ethio Office Mart",
     products: "2 items (Printer x1, Toner x3)",
-    employee: "Mekdes Alemu",
+
     quantity: 4,
     total: 64500,
     date: "2025-09-28",
@@ -436,7 +427,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0003",
     supplier: "Blue Nile Electronics",
     products: "4 items (Router x2, Switch x2)",
-    employee: "Samuel Tadesse",
+
     quantity: 4,
     total: 48990,
     date: "2025-09-28",
@@ -447,7 +438,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0004",
     supplier: "Habesha Stationery",
     products: "6 items (A4 Paper x5, Staplers x1)",
-    employee: "Hanna Getachew",
+
     quantity: 6,
     total: 12750,
     date: "2025-09-29",
@@ -458,7 +449,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0005",
     supplier: "Zemen IT Parts",
     products: "2 items (SSD 1TB x2)",
-    employee: "Saron Fikre",
+
     quantity: 2,
     total: 23000,
     date: "2025-09-29",
@@ -469,7 +460,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0006",
     supplier: "Sheger Peripherals",
     products: "5 items (Keyboard x3, Mouse x2)",
-    employee: "Yonas Gebremariam",
+
     quantity: 5,
     total: 15750,
     date: "2025-09-30",
@@ -480,7 +471,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0007",
     supplier: "Lucy Networking PLC",
     products: "3 items (Cat6 Cable 305m x1, RJ45 x2)",
-    employee: "Selamawit Dawit",
+
     quantity: 3,
     total: 21600,
     date: "2025-09-30",
@@ -491,7 +482,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0008",
     supplier: "Abyssinia Hardware & Tools",
     products: "2 items (UPS 1kVA x1, Power Strip x4)",
-    employee: "Bereket Tesfaye",
+
     quantity: 5,
     total: 33200,
     date: "2025-09-30",
@@ -502,7 +493,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0009",
     supplier: "Ethio Cloud Licenses",
     products: "1 item (Antivirus Licenses x25)",
-    employee: "Abebe Bekele",
+
     quantity: 25,
     total: 37500,
     date: "2025-10-01",
@@ -513,7 +504,7 @@ export const purchaseData = [
     purchaseId: "PUR-2025-0010",
     supplier: "Kality Electronics",
     products: '2 items (Monitor 24" x2)',
-    employee: "Mekdes Alemu",
+
     quantity: 2,
     total: 42000,
     date: "2025-10-02",
@@ -709,12 +700,7 @@ export const salesColumns = [
     className:
       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell",
   },
-  {
-    key: "employee",
-    label: "Employee",
-    className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
-  },
+
   {
     key: "quantity",
     label: "Qty",
@@ -752,7 +738,7 @@ export const salesData = [
     saleId: "SAL-2025-0001",
     customer: "Kebede Alemayehu",
     products: "2 items (Laptop x1, Mouse x1)",
-    employee: "Abebe Bekele",
+
     quantity: 2,
     total: 95000,
     date: "2025-09-28",
@@ -763,7 +749,7 @@ export const salesData = [
     saleId: "SAL-2025-0002",
     customer: "Lensa Wondimu",
     products: "1 item (Printer x1)",
-    employee: "Mekdes Alemu",
+
     quantity: 1,
     total: 35000,
     date: "2025-09-28",
@@ -774,7 +760,7 @@ export const salesData = [
     saleId: "SAL-2025-0003",
     customer: "Getahun Bekele",
     products: "3 items (Router x2, Switch x1)",
-    employee: "Samuel Tadesse",
+
     quantity: 3,
     total: 42000,
     date: "2025-09-29",
@@ -785,7 +771,7 @@ export const salesData = [
     saleId: "SAL-2025-0004",
     customer: "Mulu Habtamu",
     products: "5 items (A4 Paper x4, Toner x1)",
-    employee: "Hanna Getachew",
+
     quantity: 5,
     total: 7500,
     date: "2025-09-29",
@@ -796,7 +782,7 @@ export const salesData = [
     saleId: "SAL-2025-0005",
     customer: "Daniel Tesfaye",
     products: "2 items (SSD 1TB x1, Keyboard x1)",
-    employee: "Saron Fikre",
+
     quantity: 2,
     total: 16000,
     date: "2025-09-30",
@@ -807,7 +793,7 @@ export const salesData = [
     saleId: "SAL-2025-0006",
     customer: "Almaz Abebe",
     products: '3 items (Monitor 24" x2, Mouse x1)',
-    employee: "Yonas Gebremariam",
+
     quantity: 3,
     total: 68000,
     date: "2025-09-30",
@@ -818,7 +804,7 @@ export const salesData = [
     saleId: "SAL-2025-0007",
     customer: "Tesfahun Yimer",
     products: "1 item (Office Chair x1)",
-    employee: "Selamawit Dawit",
+
     quantity: 1,
     total: 12500,
     date: "2025-10-01",
@@ -829,7 +815,7 @@ export const salesData = [
     saleId: "SAL-2025-0008",
     customer: "Sofia Girma",
     products: "2 items (UPS 1kVA x1, Power Strip x1)",
-    employee: "Bereket Tesfaye",
+
     quantity: 2,
     total: 18000,
     date: "2025-10-01",
@@ -840,7 +826,7 @@ export const salesData = [
     saleId: "SAL-2025-0009",
     customer: "Abel Worku",
     products: "1 item (Cloud License Pack)",
-    employee: "Abebe Bekele",
+
     quantity: 1,
     total: 2500,
     date: "2025-10-02",
@@ -851,7 +837,7 @@ export const salesData = [
     saleId: "SAL-2025-0010",
     customer: "Rahel Mesfin",
     products: "2 items (Headset x2)",
-    employee: "Mekdes Alemu",
+
     quantity: 2,
     total: 7000,
     date: "2025-10-02",

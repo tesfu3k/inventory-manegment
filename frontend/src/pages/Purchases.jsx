@@ -22,13 +22,8 @@ const Purchases = () => {
         </td>
 
         {/* products */}
-        <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
-          <div className="text-sm font-medium">{purchase.products}</div>
-        </td>
-
-        {/* employee */}
         <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
-          <div className="text-sm font-medium">{purchase.employee}</div>
+          <div className="text-sm font-medium">{purchase.products}</div>
         </td>
 
         {/* Quantity */}
@@ -41,13 +36,18 @@ const Purchases = () => {
           <div className="text-sm font-medium">{purchase.total}</div>
         </td>
 
+        {/* date */}
+        <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
+          <div className="text-sm font-medium">{purchase.date}</div>
+        </td>
+
         {/* status */}
         <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
           <span
             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-              purchase.status === "In Stock"
+              purchase.status === "Completed"
                 ? "bg-green-100 text-green-900"
-                : purchase.status === "Low Stock"
+                : purchase.status === "Pending"
                 ? "bg-yellow-100 text-yellow-900"
                 : "bg-red-100 text-red-900"
             }`}
