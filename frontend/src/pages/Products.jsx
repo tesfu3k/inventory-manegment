@@ -4,61 +4,62 @@ import Table from "../components/Table";
 import { productColumns, productData } from "../data/data.js";
 const Products = () => {
   const renderData = () => {
-    return productData.map((employee) => (
-      <tr key={employee.id}>
+    return productData.map((product) => (
+      <tr key={product.id}>
         {/* checkbox */}
         <td className="px-4 py-2">
           <input type="checkbox" />
         </td>
 
-        {/* employee Information*/}
+        {/* product Information*/}
         <td className="px-4 py-2 whitespace-nowrap">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-12 w-12">
               <img
-                src={employee.avatar}
-                alt={employee.name}
+                src={product.image}
+                alt={product.name}
                 className="h-12 w-12 object-cover rounded-full"
               />
             </div>
             <div className="ml-4">
-              <div className="text-sm font-medium">{employee.name}</div>
-              <div className="text-sm">{employee.email}</div>
+              <div className="text-sm font-medium">{product.name}</div>
+              <div className="text-sm">{product.email}</div>
             </div>
           </div>
         </td>
 
-        {/* position */}
+        {/* catagory */}
         <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
-          <div className="text-sm font-medium">{employee.position}</div>
+          <div className="text-sm font-medium">{product.category}</div>
         </td>
 
-        {/* Department */}
+        {/* Supplier */}
         <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
-          <div className="text-sm">{employee.department}</div>
+          <div className="text-sm">{product.supplier}</div>
         </td>
 
-        {/* Contact */}
+        {/* Price */}
         <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm">{employee.phone}</div>
-          <div className="text-sm text-cyan-500">{employee.email}</div>
+          <div className="text-sm font-medium">{product.price}</div>
         </td>
 
-        {/* Salary */}
-        <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
-          <div className="text-sm font-medium">{employee.salary} ETB</div>
+        {/* Stock */}
+        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
+          <div className="text-sm font-medium">{product.stock}</div>
         </td>
 
         {/* status */}
         <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
           <span
             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-              employee.status === "Active"
+              product.status === "In Stock"
                 ? "bg-green-100 text-green-900"
+                : product.status === "Low Stock"
+                ? "bg-yellow-100 text-yellow-900"
                 : "bg-red-100 text-red-900"
             }`}
           >
-            {employee.status}
+            {product.status}
           </span>
         </td>
 

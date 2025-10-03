@@ -10,9 +10,10 @@ import {
   Trash2,
 } from "lucide-react";
 import EmployeeSearchBar from "../components/EmployeeSearchBar";
-import EmployeeTable from "../components/Table";
+
 //import EmployeeTableTest from "../components/Table";
 import { employeeColumns, employeeData } from "../data/data";
+import Table from "../components/Table";
 
 const employeeStatus = [
   {
@@ -143,7 +144,7 @@ const Employees = () => {
         ))}
       </div>
       <EmployeeSearchBar />
-      <EmployeeTable renderData={renderData} colData={employeeColumns} />
+      <Table renderData={renderData} colData={employeeColumns} />
       {/* <img src="/Portrait_Placeholder.png" alt="Logo" /> */}
       {/* <EmployeeTableTest /> */}
     </div>

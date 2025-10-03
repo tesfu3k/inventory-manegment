@@ -1,6 +1,4 @@
-import { Edit, Eye, Trash2 } from "lucide-react";
-
-const EmployeeTable = ({ renderData, colData }) => {
+const Table = ({ renderData, colData }) => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border-gray-200 overflow-hidden mt-5">
       <div className="overflow-x-auto">
@@ -28,4 +26,4 @@ const EmployeeTable = ({ renderData, colData }) => {
   );
 };
 
-export default EmployeeTable;
+export default Table;
