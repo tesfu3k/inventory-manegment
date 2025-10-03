@@ -74,13 +74,13 @@ const Products = () => {
             </button>
             <button
               className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50 transition-colors"
-              title="Edit Employee"
+              title="Edit Product"
             >
               <Edit size={16} />
             </button>
             <button
               className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
-              title="Delete Employee"
+              title="Delete Product"
             >
               <Trash2 size={16} />
             </button>

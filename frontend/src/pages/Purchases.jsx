@@ -12,22 +12,22 @@ const Purchases = () => {
         </td>
 
         {/* Purchase / Invoice # */}
-        <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap ">
           <div className="text-sm font-medium">{purchase.purchaseId}</div>
         </td>
 
         {/* Supplier */}
-        <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap ">
           <div className="text-sm">{purchase.supplier}</div>
         </td>
 
         {/* products */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
           <div className="text-sm font-medium">{purchase.products}</div>
         </td>
 
         {/* employee */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
           <div className="text-sm font-medium">{purchase.employee}</div>
         </td>
 
@@ -67,13 +67,13 @@ const Purchases = () => {
             </button>
             <button
               className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50 transition-colors"
-              title="Edit Employee"
+              title="Edit Purchases"
             >
               <Edit size={16} />
             </button>
             <button
               className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
-              title="Delete Employee"
+              title="Delete Purchases"
             >
               <Trash2 size={16} />
             </button>
@@ -82,6 +82,7 @@ const Purchases = () => {
       </tr>
     ));
   };
+
   return (
     <div className="px-10 text-cyan-800">
       <Table renderData={renderData} colData={purchaseColumns} />

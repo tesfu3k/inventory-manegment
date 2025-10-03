@@ -276,51 +276,121 @@ export const productData = [
   },
 ];
 
+// export const purchaseColumns = [
+//   {
+//     key: "select",
+//     label: "",
+//     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+//   }, // checkbox column
+//   {
+//     key: "purchaseId",
+//     label: "Purchase / Invoice #",
+//     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+//   },
+//   {
+//     key: "supplier",
+//     label: "Supplier",
+//     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+//   },
+//   {
+//     key: "products",
+//     label: "Product(s)",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell",
+//   },
+//   {
+//     key: "employee",
+//     label: "Employee",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
+//   },
+//   {
+//     key: "quantity",
+//     label: "Qty",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+//   },
+//   {
+//     key: "total",
+//     label: "Total (ETB)",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+//   },
+//   {
+//     key: "date",
+//     label: "Date",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+//   },
+//   {
+//     key: "status",
+//     label: "Status",
+//     className:
+//       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+//   },
+//   {
+//     key: "actions",
+//     label: "Actions",
+//     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+//   },
+// ];
+
 export const purchaseColumns = [
+  // always on
   {
     key: "select",
     label: "",
-    className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
-  }, // checkbox column
+    className: "px-4 py-2 text-left font-medium uppercase tracking-wider w-10",
+  },
   {
     key: "purchaseId",
     label: "Purchase / Invoice #",
-    className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+    className:
+      "px-4 py-2 text-left font-medium uppercase tracking-wider whitespace-nowrap",
   },
   {
     key: "supplier",
     label: "Supplier",
-    className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+    className:
+      "px-4 py-2 text-left font-medium uppercase tracking-wider max-w-[18ch] truncate",
   },
+
+  // md+
   {
     key: "products",
     label: "Product(s)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell max-w-[24ch] truncate",
   },
+
+  // lg+
   {
     key: "employee",
     label: "Employee",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell max-w-[16ch] truncate",
   },
+
+  // xl+
   {
     key: "quantity",
     label: "Qty",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell text-right w-16",
   },
   {
     key: "total",
     label: "Total (ETB)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell text-right whitespace-nowrap",
   },
+
+  // 2xl+
   {
     key: "date",
     label: "Date",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell whitespace-nowrap",
   },
   {
     key: "status",
@@ -328,10 +398,13 @@ export const purchaseColumns = [
     className:
       "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
   },
+
+  // always on
   {
     key: "actions",
     label: "Actions",
-    className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
+    className:
+      "px-4 py-2 text-left font-medium uppercase tracking-wider w-[100px]",
   },
 ];
 
