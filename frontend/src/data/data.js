@@ -276,14 +276,6 @@ export const productData = [
   },
 ];
 
-// export const purchaseColumns = [
-//   {
-//     key: "select",
-//     label: "",
-//     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
-//   }, // checkbox column
-//   {
-//     key: "purchaseId",
 //     label: "Purchase / Invoice #",
 //     className: "px-4 py-2 text-left font-medium uppercase tracking-wider",
 //   },
@@ -678,7 +670,7 @@ export const customerData = [
   },
 ];
 
-export const salesColumns = [
+export const saleColumns = [
   {
     key: "select",
     label: "",
@@ -698,14 +690,14 @@ export const salesColumns = [
     key: "products",
     label: "Product(s)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
   },
 
   {
     key: "quantity",
     label: "Qty",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
   },
   {
     key: "total",
@@ -717,7 +709,7 @@ export const salesColumns = [
     key: "date",
     label: "Date",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
   },
   {
     key: "status",
