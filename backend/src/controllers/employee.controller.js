@@ -163,7 +163,7 @@ const rejectEmployee = async (req, res) => {
     if (!employee)
       return res.status(404).json({
         message: "Employee not found or already processed",
-        success: true,
+        success: false,
         data: null,
       });
 
