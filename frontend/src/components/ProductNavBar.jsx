@@ -69,9 +69,9 @@ const ProductNavBar = () => {
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
-          <span class="text-md text-cyan-600">Sort By:</span>
-          <select class="border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
+        <div class="flex flex-col">
+          <label class="text-xs text-cyan-500 font-medium">Sort By:</label>
+          <select class="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
             <option>Date Added</option>
             <option>Price</option>
             <option>Stock</option>

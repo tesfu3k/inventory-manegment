@@ -126,10 +126,14 @@ const approveEmployee = async (req, res) => {
       });
 
     //Update linked User
-    await employeeModel.findByIdAndUpdate(employeeId, {
-      isActive: true,
-      pendingApproval: false,
-    });
+    const approvedEmployee = await employeeModel.findByIdAndUpdate(
+      employeeId,
+      {
+        isActive: true,
+        pendingApproval: false,
+      },
+      { new: true }
+    );
 
     // Approved Employee list
 
@@ -138,7 +142,7 @@ const approveEmployee = async (req, res) => {
     res.status(200).json({
       message: "Employee approved",
       success: true,
-      data: { ...employee._doc, isActive: true, pendingApproval: false },
+      data: approvedEmployee,
     });
   } catch (error) {
     res
