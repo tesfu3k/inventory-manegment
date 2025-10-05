@@ -86,7 +86,7 @@ const registerEmployee = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error);
   }
 };
@@ -106,7 +106,7 @@ const listPendingEmployees = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error);
   }
 };
@@ -147,7 +147,7 @@ const approveEmployee = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error.message);
   }
 };
@@ -179,7 +179,7 @@ const rejectEmployee = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error.message);
   }
 };
@@ -199,7 +199,7 @@ const listApprovedEmployees = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error.message);
   }
 };
@@ -220,7 +220,7 @@ const getEmployeeById = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ massage: "internal sever error", success: false, data: null });
+      .json({ message: "internal sever error", success: false, data: null });
     console.log(error.message);
   }
 };
