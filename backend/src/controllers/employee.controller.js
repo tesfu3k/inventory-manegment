@@ -6,6 +6,7 @@ const registerEmployee = async (req, res) => {
     firstName,
     lastName,
     email,
+    gender,
     salary,
     startDate,
     department,
@@ -22,6 +23,7 @@ const registerEmployee = async (req, res) => {
     !department ||
     !position ||
     !phone ||
+    !gender ||
     !address
   )
     return res.status(400).json({
@@ -63,6 +65,7 @@ const registerEmployee = async (req, res) => {
       // userId: User._id,
       firstName,
       lastName,
+      gender,
       email,
       salary,
       startDate,
@@ -184,6 +187,23 @@ const rejectEmployee = async (req, res) => {
   }
 };
 
+const getAllEmployee = async (req, res) => {
+  try {
+    const allEmployees = await employeeModel.find({});
+
+    res.status(200).json({
+      message: "All employees retrieved",
+      success: true,
+      data: allEmployees,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "internal sever error", success: false, data: null });
+    console.log(error);
+  }
+};
+
 const listApprovedEmployees = async (req, res) => {
   try {
     const getApprovedEmployees = await employeeModel.find({
@@ -232,4 +252,5 @@ export {
   rejectEmployee,
   listPendingEmployees,
   getEmployeeById,
+  getAllEmployee,
 };

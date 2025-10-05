@@ -8,6 +8,11 @@ const employeeSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    gender: {
+      type: String,
+      enum: ["Male", "Female"],
+      required: "true",
+    },
     salary: {
       type: Number,
       required: true,

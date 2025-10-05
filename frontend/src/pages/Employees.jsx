@@ -10,10 +10,12 @@ import {
   Trash2,
 } from "lucide-react";
 import EmployeeSearchBar from "../components/EmployeeSearchBar";
-
+import { toast } from "react-hot-toast";
 //import EmployeeTableTest from "../components/Table";
-import { employeeColumns, employeeData } from "../data/data";
+import { employeeColumns } from "../data/data";
 import Table from "../components/Table";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const employeeStatus = [
   {
@@ -44,8 +46,25 @@ const employeeStatus = [
 ];
 
 const Employees = () => {
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    const getEmployee = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:3000/api/employees/all",
+          { withCredentials: true }
+        );
+        setEmployees(data.data);
+      } catch (error) {
+        toast.error(
+          error.message || "Something went wrong. Please try again later"
+        );
+      }
+    };
+    getEmployee();
+  }, []);
   const renderData = () => {
-    return employeeData.map((employee) => (
+    return employees.map((employee) => (
       <tr key={employee.id}>
         {/* checkbox */}
         <td className="px-4 py-2">
@@ -63,8 +82,10 @@ const Employees = () => {
               />
             </div>
             <div className="ml-4">
-              <div className="text-sm font-medium">{employee.name}</div>
-              <div className="text-sm">{employee.email}</div>
+              <div className="text-sm font-medium">
+                {employee.firstName} {employee.lastName}
+              </div>
+              {/* <div className="text-sm">{employee.email}</div> */}
             </div>
           </div>
         </td>
@@ -94,12 +115,18 @@ const Employees = () => {
         <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
           <span
             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-              employee.status === "Active"
+              employee.pendingApproval === true
+                ? "bg-yellow-100 text-yellow-900"
+                : employee.isActive === true
                 ? "bg-green-100 text-green-900"
                 : "bg-red-100 text-red-900"
             }`}
           >
-            {employee.status}
+            {employee.pendingApproval
+              ? "Pending"
+              : employee.isActive
+              ? "Active"
+              : "InActive"}
           </span>
         </td>
 

@@ -50,96 +50,112 @@ export const employeeData = [
   {
     id: 1,
     name: "Abebe Bekele",
+    gender: "Male",
     position: "Senior Developer",
     department: "Engineering",
     phone: "+251 911 123 456",
     email: "abebe.bekele@company.et",
-    salary: 95000, // in ETB
-    status: "Active",
+    salary: 95000, // ETB
+    isActive: true,
+    pendingApproval: false, // Active
     avatar:
       "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 2,
     name: "Mekdes Alemu",
+    gender: "Female",
     position: "Product Manager",
     department: "Product",
     phone: "+251 922 234 567",
     email: "mekdes.alemu@company.et",
     salary: 110000,
-    status: "Active",
+    isActive: true,
+    pendingApproval: false, // Active
     avatar:
       "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 3,
     name: "Samuel Tadesse",
+    gender: "Male",
     position: "UX Designer",
     department: "Design",
     phone: "+251 933 345 678",
     email: "samuel.tadesse@company.et",
     salary: 78000,
-    status: "Active",
+    isActive: true,
+    pendingApproval: false, // Active
     avatar:
       "https://images.unsplash.com/photo-1628157588553-5eeea00af15f?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 4,
     name: "Hanna Getachew",
+    gender: "Female",
     position: "DevOps Engineer",
     department: "Engineering",
     phone: "+251 944 456 789",
     email: "hanna.getachew@company.et",
     salary: 88000,
-    status: "Inactive",
+    isActive: false,
+    pendingApproval: true, // Pending
     avatar:
       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 5,
     name: "Saron Fikre",
+    gender: "Female",
     position: "HR Manager",
     department: "Human Resources",
     phone: "+251 955 567 890",
     email: "saron.fikre@company.et",
     salary: 85000,
-    status: "Active",
+    isActive: false,
+    pendingApproval: false, // Inactive
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 6,
     name: "Yonas Gebremariam",
+    gender: "Male",
     position: "Marketing Specialist",
     department: "Marketing",
     phone: "+251 966 678 901",
     email: "yonas.gebremariam@company.et",
     salary: 65000,
-    status: "Active",
+    isActive: false,
+    pendingApproval: true, // Pending
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 7,
     name: "Selamawit Dawit",
+    gender: "Female",
     position: "Finance Director",
     department: "Finance",
     phone: "+251 977 789 012",
     email: "selamawit.dawit@company.et",
     salary: 125000,
-    status: "Active",
+    isActive: false,
+    pendingApproval: false, // Inactive
     avatar:
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: 8,
     name: "Bereket Tesfaye",
+    gender: "Male",
     position: "Junior Developer",
     department: "Engineering",
     phone: "+251 988 890 123",
     email: "bereket.tesfaye@company.et",
     salary: 70000,
-    status: "Active",
+    isActive: true,
+    pendingApproval: false, // Active
     avatar:
       "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150&h=150&fit=crop&crop=face",
   },
