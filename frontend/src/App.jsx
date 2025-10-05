@@ -15,6 +15,7 @@ import Purchases from "./pages/Purchases";
 import Sales from "./pages/Sales";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
+import AddEmployee from "./pages/AddEmployee";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const App = () => {
     };
 
     fatchUser();
-  }, []);
+  }, [setUser]);
 
   if (isLoading) return <h1>Loading...</h1>;
   return (
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="sales" element={<Sales />} />
         <Route path="customers" element={<Customers />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="employees/record" element={<AddEmployee />} />
       </Route>
     </Routes>
   );

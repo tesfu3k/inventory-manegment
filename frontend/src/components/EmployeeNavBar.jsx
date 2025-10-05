@@ -12,7 +12,7 @@ const EmployeeNavBar = () => {
       </div>
       <div className="flex gap-4 text-lg max-md:justify-evenly">
         <Link
-          to="#"
+          to="record"
           className="flex items-center gap-3 border-l-5 border-l-[rgb(59,130,246)]  rounded-xl shadow-lg bg-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.2)] px-3 py-2"
         >
           <UserPlus2 className="text-[rgb(59,130,246)]" />

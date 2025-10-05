@@ -12,7 +12,7 @@ import {
 import EmployeeSearchBar from "../components/EmployeeSearchBar";
 import { toast } from "react-hot-toast";
 //import EmployeeTableTest from "../components/Table";
-import { employeeColumns } from "../data/data";
+import { employeeColumns } from "../data/data.js";
 import Table from "../components/Table";
 import { useEffect, useState } from "react";
 import axios from "axios";
