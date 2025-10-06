@@ -68,7 +68,7 @@ const AddEmployee = () => {
           </div>
         </div>
 
-        <hr className="my-10 border-cyan-800/10 b" />
+        <hr className="my-5 border-cyan-800/10 b" />
 
         <h1 className="text-2xl font-bold mb-3 max-lg:text-lg max-lg:text-center">
           Contact Information
@@ -120,7 +120,7 @@ const AddEmployee = () => {
           </div>
         </div>
 
-        <hr className="my-10 border-cyan-800/10 b" />
+        <hr className="my-5 border-cyan-800/10 b" />
 
         <h1 className="text-2xl font-bold mb-3 max-lg:text-lg max-lg:text-center">
           Job Information
@@ -209,7 +209,7 @@ const AddEmployee = () => {
           </div>
         </div>
 
-        <hr className="my-10 border-cyan-800/10" />
+        <hr className="my-5 border-cyan-800/10" />
 
         <div className="flex gap-8 my-10 text-lg font-medium lg:gap-40 ">
           <button className="w-full border border-cyan-800 rounded-xl py-3 hover:bg-cyan-100 active:scale-95 cursor-pointer">
