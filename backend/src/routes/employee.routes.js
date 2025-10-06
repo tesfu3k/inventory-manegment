@@ -5,6 +5,7 @@ import adminMiddleware from "../middlewares/admin.middleware.js";
 
 import {
   approveEmployee,
+  employeeStatus,
   getAllEmployee,
   getEmployeeById,
   listApprovedEmployees,
@@ -35,5 +36,8 @@ route.get("/", protectRoute, adminMiddleware, listApprovedEmployees);
 
 // Admin or self: Get specific employee details
 route.get("/:id", protectRoute, adminMiddleware, getEmployeeById);
+
+// Admin: Get employees status data
+route.get("/status", protectRoute, adminMiddleware, employeeStatus);
 
 export default route;
