@@ -19,6 +19,10 @@ const AddEmployee = () => {
 
   const navigate = useNavigate();
 
+  const onCancelHandler = () => {
+    navigate(-1);
+  };
+
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
     setEmployeeData((prev) => ({ ...prev, [name]: value }));
@@ -303,6 +307,7 @@ const AddEmployee = () => {
         <div className="flex gap-8 my-10 text-lg font-medium lg:gap-40 ">
           <button
             type="button"
+            onClick={onCancelHandler}
             className="w-full border border-cyan-800 rounded-xl py-3 hover:bg-cyan-100 active:scale-95 cursor-pointer"
           >
             Cancel
