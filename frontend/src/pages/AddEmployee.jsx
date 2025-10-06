@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
   const [employeeData, setEmployeeData] = useState({
@@ -14,14 +17,44 @@ const AddEmployee = () => {
     address: "",
   });
 
+  const navigate = useNavigate();
+
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
     setEmployeeData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(employeeData);
+    if (
+      !employeeData.firstName ||
+      !employeeData.lastName ||
+      !employeeData.email ||
+      !employeeData.gender ||
+      !employeeData.salary ||
+      !employeeData.startDate ||
+      !employeeData.department ||
+      !employeeData.position ||
+      !employeeData.phone ||
+      !employeeData.address
+    )
+      return toast.error("Enter all required fields");
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/employees/register",
+        employeeData,
+        { withCredentials: true, validateStatus: (status) => status < 500 }
+      );
+      if (data.success) {
+        navigate("/employees");
+        return toast.success(data.message);
+      }
+      if (!data.success) return toast.error(data.message);
+    } catch (error) {
+      toast.error(
+        error.message || "Something went wrong. Please try again later"
+      );
+    }
   };
 
   return (
