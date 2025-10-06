@@ -28,6 +28,9 @@ route.post("/:id/approve", protectRoute, adminMiddleware, approveEmployee);
 //Admin-only: All employees list
 route.get("/all", protectRoute, adminMiddleware, getAllEmployee);
 
+// Admin: Get employees status data
+route.get("/status", protectRoute, adminMiddleware, employeeStatus);
+
 //Admin-only: Reject/Delete a pending employee
 route.delete("/:id", protectRoute, adminMiddleware, rejectEmployee);
 
@@ -36,8 +39,5 @@ route.get("/", protectRoute, adminMiddleware, listApprovedEmployees);
 
 // Admin or self: Get specific employee details
 route.get("/:id", protectRoute, adminMiddleware, getEmployeeById);
-
-// Admin: Get employees status data
-route.get("/status", protectRoute, adminMiddleware, employeeStatus);
 
 export default route;

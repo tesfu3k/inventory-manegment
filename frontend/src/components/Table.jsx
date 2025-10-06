@@ -6,7 +6,7 @@ const Table = ({ renderData, colData }) => {
           <thead className="bg-gray-50 border-b border-gray-200 ">
             <tr>
               {colData.map((column) => (
-                <td className={column.className}>
+                <td key={column.key} className={column.className}>
                   {column.key === "select" ? (
                     <input type="checkbox" />
                   ) : (

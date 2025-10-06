@@ -17,36 +17,42 @@ import Table from "../components/Table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const employeeStatus = [
-  {
-    id: 1,
-    icons: UserCog,
-    title: "Total Employees",
-    value: "0",
-  },
-  {
-    id: 2,
-    icons: Clock,
-    title: "Pending Employees",
-    value: "0",
-  },
-  {
-    id: 3,
-    icons: UserCheck,
-    title: "Active Employees",
-    value: "0",
-  },
-  {
-    id: 4,
-    icons: UserPlus,
-    title: "New Hires ",
-    value: "0 ",
-    per: "/month",
-  },
-];
-
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
+  const [status, setStatus] = useState({
+    totalEmployees: "",
+    pendingEmployees: "",
+    activeEmployees: "",
+    newHires: "",
+  });
+  const employeeStatus = [
+    {
+      id: 1,
+      icons: UserCog,
+      title: "Total Employees",
+      value: status.totalEmployees,
+    },
+    {
+      id: 2,
+      icons: Clock,
+      title: "Pending Employees",
+      value: status.pendingEmployees,
+    },
+    {
+      id: 3,
+      icons: UserCheck,
+      title: "Active Employees",
+      value: status.activeEmployees,
+    },
+    {
+      id: 4,
+      icons: UserPlus,
+      title: "New Hires ",
+      value: status.newHires,
+      per: "/month",
+    },
+  ];
+
   useEffect(() => {
     const getEmployee = async () => {
       try {
@@ -62,10 +68,26 @@ const Employees = () => {
       }
     };
     getEmployee();
+
+    const fatchStatus = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:3000/api/employees/status",
+          { withCredentials: true }
+        );
+        setStatus(data.status);
+        console.log(status);
+      } catch (error) {
+        toast.error(
+          error.message || "Something went wrong. Please try again later"
+        );
+      }
+    };
+    fatchStatus();
   }, []);
   const renderData = () => {
     return employees.map((employee) => (
-      <tr key={employee.id}>
+      <tr key={employee._id}>
         {/* checkbox */}
         <td className="px-4 py-2">
           <input type="checkbox" />

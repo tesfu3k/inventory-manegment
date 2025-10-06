@@ -248,15 +248,20 @@ const getEmployeeById = async (req, res) => {
 const employeeStatus = async (req, res) => {
   try {
     const totalEmployees = await employeeModel.countDocuments();
+
+    // Pending approvals
     const pendingEmployees = await employeeModel.countDocuments({
       pendingApproval: true,
-      expiresAt: { $gte: new Date.now() },
     });
+
+    // Active employees
     const activeEmployees = await employeeModel.countDocuments({
       isActive: true,
     });
+
+    // New hires within last 30 days
     const newHires = await employeeModel.countDocuments({
-      createdAt: { $gte: new Date.now() - 30 * 24 * 60 * 60 * 1000 },
+      createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
     });
 
     res.json({
@@ -264,10 +269,12 @@ const employeeStatus = async (req, res) => {
       status: { totalEmployees, pendingEmployees, activeEmployees, newHires },
     });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch stats", success: false, data: null });
+    console.error("Error fetching employee status:", error);
+    res.status(500).json({
+      message: "Failed to fetch stats",
+      success: false,
+      data: null,
+    });
   }
 };
 

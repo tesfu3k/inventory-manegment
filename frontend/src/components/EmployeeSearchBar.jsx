@@ -11,7 +11,7 @@ const EmployeeSearchBar = () => {
       />
       <div className="flex gap-4">
         <select className="border rounded-lg p-2">
-          <option value="" disabled selected>
+          <option value="" disabled>
             All Departments
           </option>
           <option value="hr">Human Resources</option>
@@ -22,7 +22,7 @@ const EmployeeSearchBar = () => {
           <option value="operations">Operations</option>
         </select>
         <select className="border rounded-lg p-2">
-          <option value="" disabled selected>
+          <option value="" disabled>
             Status
           </option>
           <option value="Active">Active</option>
