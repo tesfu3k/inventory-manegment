@@ -68,13 +68,23 @@ const DashBoard = () => {
       id: 5,
       icons: ShoppingCart,
       title: "Today Sales",
-      value: dashboardStatus.todayTotalSale,
+      value: (
+        <>
+          {dashboardStatus.todayTotalSale}{" "}
+          <span className="text-sm text-cyan-800/50 ml-1">ETB</span>
+        </>
+      ),
     },
     {
       id: 6,
       icons: ClipboardList,
       title: "Today Purchases",
-      value: dashboardStatus.todayTotalPurchase,
+      value: (
+        <>
+          {dashboardStatus.todayTotalPurchase}{" "}
+          <span className="text-sm text-cyan-800/50">ETB</span>
+        </>
+      ),
     },
   ];
   return (
