@@ -76,7 +76,6 @@ const Employees = () => {
           { withCredentials: true }
         );
         setStatus(data.status);
-        console.log(status);
       } catch (error) {
         toast.error(
           error.message || "Something went wrong. Please try again later"

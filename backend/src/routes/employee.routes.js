@@ -5,6 +5,7 @@ import adminMiddleware from "../middlewares/admin.middleware.js";
 
 import {
   approveEmployee,
+  dashboardStatus,
   employeeStatus,
   getAllEmployee,
   getEmployeeById,
@@ -30,6 +31,9 @@ route.get("/all", protectRoute, adminMiddleware, getAllEmployee);
 
 // Admin: Get employees status data
 route.get("/status", protectRoute, adminMiddleware, employeeStatus);
+
+// Admin: Get dashboard status data
+route.get("/dashbord-status", protectRoute, adminMiddleware, dashboardStatus);
 
 //Admin-only: Reject/Delete a pending employee
 route.delete("/:id", protectRoute, adminMiddleware, rejectEmployee);

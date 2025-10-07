@@ -1,6 +1,10 @@
 //import User from "../models/user.model.js";
 import employeeModel from "../models/employee.model.js";
-
+import { customerModel } from "../models/customer.model.js";
+import { supplierModel } from "../models/supplier.model.js";
+import { productModel } from "../models/product.model.js";
+import { saleModel } from "../models/sale.model.js";
+import { purchaseModel } from "../models/purchase.model.js";
 const registerEmployee = async (req, res) => {
   const {
     firstName,
@@ -278,6 +282,56 @@ const employeeStatus = async (req, res) => {
   }
 };
 
+const dashboardStatus = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const totalEmployees = await employeeModel.countDocuments();
+    const totalCustomers = await customerModel.countDocuments();
+    const totalSupplier = await supplierModel.countDocuments();
+    const totalProduct = await productModel.countDocuments();
+
+    const todaySale = await saleModel
+      .find({ createdAt: { $gte: today } })
+      .select({ totalPrice: true });
+    const todayTotalSale = todaySale.reduce((prev, price) => prev + price, 0);
+
+    const todayPurchase = await purchaseModel
+      .find({
+        createdAt: { $gte: today },
+      })
+      .select({ totalCost: true });
+    const todayTotalPurchase = todayPurchase.reduce(
+      (prev, price) => prev + price,
+      0
+    );
+
+    // let totalPrice = 0;
+    // totalSale.forEach((price) => {
+    //   totalPrice += price
+    // })
+
+    return res.status(200).json({
+      success: true,
+      status: {
+        totalCustomers,
+        totalEmployees,
+        todayTotalPurchase,
+        totalSupplier,
+        todayTotalSale,
+        totalProduct,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard status:", error);
+    res.status(500).json({
+      message: "Failed to fetch stats",
+      success: false,
+      data: null,
+    });
+  }
+};
+
 export {
   registerEmployee,
   listApprovedEmployees,
@@ -287,4 +341,5 @@ export {
   getEmployeeById,
   getAllEmployee,
   employeeStatus,
+  dashboardStatus,
 };
