@@ -14,41 +14,38 @@ import { toast } from "react-hot-toast";
 //import EmployeeTableTest from "../components/Table";
 import { employeeColumns } from "../data/data.js";
 import Table from "../components/Table";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { EmployeeContext } from "../context/contextCreator.js";
 
 const Employees = () => {
+  const { employeesStatus } = useContext(EmployeeContext);
   const [employees, setEmployees] = useState([]);
-  const [status, setStatus] = useState({
-    totalEmployees: "",
-    pendingEmployees: "",
-    activeEmployees: "",
-    newHires: "",
-  });
+
   const employeeStatus = [
     {
       id: 1,
       icons: UserCog,
       title: "Total Employees",
-      value: status.totalEmployees,
+      value: employeesStatus.totalEmployees,
     },
     {
       id: 2,
       icons: Clock,
       title: "Pending Employees",
-      value: status.pendingEmployees,
+      value: employeesStatus.pendingEmployees,
     },
     {
       id: 3,
       icons: UserCheck,
       title: "Active Employees",
-      value: status.activeEmployees,
+      value: employeesStatus.activeEmployees,
     },
     {
       id: 4,
       icons: UserPlus,
       title: "New Hires ",
-      value: status.newHires,
+      value: employeesStatus.newHires,
       per: "/month",
     },
   ];
@@ -68,22 +65,6 @@ const Employees = () => {
       }
     };
     getEmployee();
-
-    const fatchStatus = async () => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:3000/api/employees/status",
-          { withCredentials: true }
-        );
-        setStatus(data.status);
-        console.log(status);
-      } catch (error) {
-        toast.error(
-          error.message || "Something went wrong. Please try again later"
-        );
-      }
-    };
-    fatchStatus();
   }, []);
   const renderData = () => {
     return employees.map((employee) => (
