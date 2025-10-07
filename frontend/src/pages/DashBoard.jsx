@@ -30,8 +30,10 @@ const DashBoard = () => {
           "http://localhost:3000/api/employees/dashbord-status",
           { withCredentials: true }
         );
+
         if (data.success) return setDashboardStatus(data.status);
       };
+
       fatchDahboardStatus();
     } catch (error) {
       console.error(error, "fail to fach dashbord status");
@@ -44,11 +46,36 @@ const DashBoard = () => {
       title: "Total Employees",
       value: dashboardStatus.totalEmployees,
     },
-    { id: 2, icons: Users, title: "Total Customers", value: "0" },
-    { id: 3, icons: Truck, title: "Total Suppliers", value: "0" },
-    { id: 4, icons: Boxes, title: "Total Products", value: "0" },
-    { id: 5, icons: ShoppingCart, title: "Today Sales", value: "0" },
-    { id: 6, icons: ClipboardList, title: "Today Purchases", value: "0" },
+    {
+      id: 2,
+      icons: Users,
+      title: "Total Customers",
+      value: dashboardStatus.totalCustomers,
+    },
+    {
+      id: 3,
+      icons: Truck,
+      title: "Total Suppliers",
+      value: dashboardStatus.totalSupplier,
+    },
+    {
+      id: 4,
+      icons: Boxes,
+      title: "Total Products",
+      value: dashboardStatus.totalProduct,
+    },
+    {
+      id: 5,
+      icons: ShoppingCart,
+      title: "Today Sales",
+      value: dashboardStatus.todayTotalSale,
+    },
+    {
+      id: 6,
+      icons: ClipboardList,
+      title: "Today Purchases",
+      value: dashboardStatus.todayTotalPurchase,
+    },
   ];
   return (
     <div className="px-10">
