@@ -23,7 +23,7 @@ const ProductNavBar = () => {
           </div>
 
           <Link
-            to="#"
+            to="record"
             className="flex items-center gap-3 border-l-5 border-l-green-500 p-4 rounded-xl shadow-lg bg-green-200 hover:bg-green-200/50 "
           >
             <PackagePlus className="text-green-500" />
