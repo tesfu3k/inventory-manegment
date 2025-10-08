@@ -1,11 +1,33 @@
 import { Edit, Eye, Trash2 } from "lucide-react";
 import ProductNavBar from "../components/ProductNavBar";
 import Table from "../components/Table";
-import { productColumns, productData } from "../data/data.js";
+import { productColumns } from "../data/data.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 const Products = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fatchProduct = async () => {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/inventory/products",
+        {
+          withCredentials: true,
+          validateStatus: (status) => status < 500,
+        }
+      );
+      if (data.success) {
+        setProducts(data.data);
+        console.log(data.data);
+        return toast.success(data.message);
+      }
+      if (!data.success) return toast.error(data.message);
+    };
+    fatchProduct();
+  }, []);
   const renderData = () => {
-    return productData.map((product) => (
-      <tr key={product.id}>
+    return products.map((product) => (
+      <tr key={product._id}>
         {/* checkbox */}
         <td className="px-4 py-2">
           <input type="checkbox" />
@@ -16,50 +38,48 @@ const Products = () => {
           <div className="flex items-center">
             <div className="flex-shrink-0 h-12 w-12">
               <img
-                src={product.image}
+                src="/product.jpg"
                 alt={product.name}
                 className="h-12 w-12 object-cover rounded-full"
               />
             </div>
             <div className="ml-4">
               <div className="text-sm font-medium">{product.name}</div>
-              <div className="text-sm">{product.email}</div>
             </div>
           </div>
         </td>
 
         {/* catagory */}
-        <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
-          <div className="text-sm font-medium">{product.category}</div>
+        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
+          <div className="text-sm font-medium">{product.catagory}</div>
         </td>
 
-        {/* Supplier */}
+        {/* Unit price */}
+        <td className="px-4 py-2 whitespace-nowrap hidden sm:table-cell">
+          <div className="text-sm">{product.unitPrice}</div>
+        </td>
+
+        {/* Stock quantity */}
         <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
-          <div className="text-sm">{product.supplier}</div>
-        </td>
-
-        {/* Price */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm font-medium">{product.price}</div>
-        </td>
-
-        {/* Stock */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm font-medium">{product.stock}</div>
+          <div className="text-sm font-medium">{product.stockQuantity}</div>
         </td>
 
         {/* status */}
-        <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
           <span
             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-              product.status === "In Stock"
-                ? "bg-green-100 text-green-900"
-                : product.status === "Low Stock"
+              product.stockQuantity === 0
+                ? "bg-red-100 text-red-900"
+                : product.stockQuantity <= product.lowStockThreshed
                 ? "bg-yellow-100 text-yellow-900"
-                : "bg-red-100 text-red-900"
+                : "bg-green-100 text-green-900"
             }`}
           >
-            {product.status}
+            {product.stockQuantity === 0
+              ? "Out of Stock"
+              : product.stockQuantity <= product.lowStockThreshed
+              ? "Low Stock"
+              : "In Stock"}
           </span>
         </td>
 

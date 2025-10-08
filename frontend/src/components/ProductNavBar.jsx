@@ -33,11 +33,13 @@ const ProductNavBar = () => {
       </div>
 
       {/* -- Filters -- */}
-      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center bg-white shadow-sm rounded-lg p-4 mb-6 gap-4">
-        <div class="flex flex-wrap gap-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center bg-white shadow-sm rounded-lg p-4 mb-6 gap-4">
+        <div className="flex flex-wrap gap-4">
           <div className="flex flex-col">
-            <label class="text-xs text-cyan-500 font-medium">Category</label>
-            <select class="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
+            <label className="text-xs text-cyan-500 font-medium">
+              Category
+            </label>
+            <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
               <option>All Categories</option>
               <option>Electronics</option>
               <option>Clothing</option>
@@ -47,8 +49,10 @@ const ProductNavBar = () => {
           </div>
 
           <div className="flex flex-col">
-            <label class="text-xs text-cyan-500 font-medium">Supplier</label>
-            <select class="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
+            <label className="text-xs text-cyan-500 font-medium">
+              Supplier
+            </label>
+            <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
               <option>All Suppliers</option>
               <option>Supplier A</option>
               <option>Supplier B</option>
@@ -57,10 +61,10 @@ const ProductNavBar = () => {
           </div>
 
           <div className="flex flex-col">
-            <label class="text-xs text-cyan-500 font-medium">
+            <label className="text-xs text-cyan-500 font-medium">
               Availability
             </label>
-            <select class="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
+            <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
               <option>All</option>
               <option>In stock</option>
               <option>Low stock</option>
@@ -69,9 +73,9 @@ const ProductNavBar = () => {
           </div>
         </div>
 
-        <div class="flex flex-col">
-          <label class="text-xs text-cyan-500 font-medium">Sort By:</label>
-          <select class="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
+        <div className="flex flex-col">
+          <label className="text-xs text-cyan-500 font-medium">Sort By:</label>
+          <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
             <option>Date Added</option>
             <option>Price</option>
             <option>Stock</option>

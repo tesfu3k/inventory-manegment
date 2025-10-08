@@ -176,31 +176,26 @@ export const productColumns = [
     key: "category",
     label: "Category",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden md:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
   },
+
   {
-    key: "supplier",
-    label: "Supplier",
-    className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
-  },
-  {
-    key: "price",
+    key: "unitPrice",
     label: "Price (ETB)",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden sm:table-cell",
   },
   {
     key: "stock",
     label: "Stock",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
   },
   {
     key: "status",
     label: "Status",
     className:
-      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden 2xl:table-cell",
+      "px-4 py-2 text-left font-medium uppercase tracking-wider hidden lg:table-cell",
   },
   {
     key: "actions",
