@@ -285,7 +285,7 @@ const employeeStatus = async (req, res) => {
 };
 
 const genInviteLink = async (req, res) => {
-  const { userId } = req;
+  const { userId } = req; // get userId from middleware
   const expirationDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
   if (!mongoose.Types.ObjectId.isValid(userId))
     return res
@@ -314,7 +314,56 @@ const genInviteLink = async (req, res) => {
   }
 };
 
-const verifyInviteLink = async (req, res) => {};
+const verifyInviteLink = async (req, res) => {
+  const { id } = req.params; // get Invitation Id from url
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({
+        message: "Invalid invitation linkS",
+        success: false,
+        data: null,
+      });
+
+    const invitation = await invitationModel.findById(id);
+
+    if (!invitation)
+      return res.status(400).json({
+        message: "Invitation is not found",
+        success: false,
+        data: null,
+      });
+
+    // Check if expired
+    if (new Date() > new Date(invitation.expiredAt))
+      return res.status(410).json({
+        message: "This invitation link has expired",
+        success: false,
+        data: null,
+      });
+    // Check if already submitted
+    if (invitation.isSubmitted)
+      return res.status(409).json({
+        message: "The Registration link has already submitted",
+        success: false,
+        data: null,
+      });
+
+    // if it is valid link
+    res.status(200).json({
+      message: "Invitation link is valid",
+      success: true,
+      data: { id: invitation._id },
+    });
+  } catch (error) {
+    console.error("Error varifying invitation link", error);
+    res.status(500).json({
+      message: "Server error verifying invitation link.",
+      success: false,
+      data: null,
+    });
+  }
+};
 
 const dashboardStatus = async (req, res) => {
   try {
@@ -377,4 +426,5 @@ export {
   employeeStatus,
   dashboardStatus,
   genInviteLink,
+  verifyInviteLink,
 };
