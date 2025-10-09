@@ -365,6 +365,71 @@ const verifyInviteLink = async (req, res) => {
   }
 };
 
+export const registerInvitedEmployee = async (req, res) => {
+  const { id } = req.params;
+  const formData = req.body;
+
+  try {
+    const invitation = await invitationModel.findById(id);
+    if (!invitation)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid invitation link" });
+
+    if (invitation.isSubmitted)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invitation already used" });
+
+    if (invitation.expiredAt < new Date())
+      return res
+        .status(400)
+        .json({ success: false, message: "Invitation link expired" });
+
+    // if (invitation.email !== formData.email)
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, message: "Email does not match invitation" });
+
+    const existingEmployee = await employeeModel.findOne({
+      email: formData.email,
+    });
+    if (existingEmployee)
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already registered" });
+
+    // Create new employee
+    const newEmployee = await employeeModel.create({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      gender: formData.gender,
+      salary: formData.salary,
+      startDate: formData.startDate,
+      department: formData.department,
+      position: formData.position,
+      phone: formData.phone,
+      address: formData.address,
+      pendingApproval: true,
+      isActive: false,
+    });
+
+    // Mark invitation as used
+    invitation.isSubmitted = true;
+    await invitation.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Employee registered successfully and awaiting approval",
+      data: newEmployee,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 const dashboardStatus = async (req, res) => {
   try {
     const today = new Date();
