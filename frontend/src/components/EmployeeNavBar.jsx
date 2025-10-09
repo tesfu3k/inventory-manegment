@@ -1,4 +1,7 @@
+import axios from "axios";
 import {
+  Check,
+  Copy,
   IdCardLanyard,
   Link as LinkIcon,
   UserPlus2,
@@ -6,10 +9,37 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+let timeOutId;
 
 const EmployeeNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [url, setUrl] = useState(null);
+  const [copy, setCopy] = useState(false);
+
+  const handleGenerateLink = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/employees/invite",
+        {},
+        { withCredentials: true, validateStatus: (status) => status < 500 }
+      );
+      if (data.success) return setUrl(data.data.link);
+      toast.error("data.message");
+    } catch (error) {
+      toast.error(error.message || "something went wrong pls try again later");
+    }
+  };
+
+  const handleCopy = async () => {
+    clearTimeout(timeOutId);
+    await navigator.clipboard.writeText(url);
+    setCopy(true);
+    timeOutId = setTimeout(() => {
+      setCopy(false);
+    }, 1000);
+  };
   return (
     <div className="text-cyan-800 flex justify-between lg:items-center py-5 max-md:flex-col max-md:gap-4 sticky top-0 bg-[rgb(230,248,252)] z-10">
       <div className="flex gap-3 items-center ">
@@ -51,11 +81,34 @@ const EmployeeNavBar = () => {
             <p className="text-justify mb-4">
               Generate and share an invitation link to onboard new employees.
             </p>
-            <div className="flex justify-center">
-              <button className="bg-cyan-400 text-white text-lg font-semibold  py-2 rounded-xl w-full">
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={handleGenerateLink}
+                className="bg-cyan-400 text-white text-lg font-semibold  py-2 rounded-xl w-full hover:bg-cyan-400/50 active:scale-90 transition-transform duration-700"
+              >
                 Generate Invitation Link
               </button>
             </div>
+            {url && (
+              <div className="bg-cyan-100/45 rounded-2xl px-4 py-2 pb-6">
+                <p className="mb-2">INVITATION LINK</p>
+                <div className="flex gap-2">
+                  <input
+                    className="border border-cyan-400 rounded-md px-2  bg-white text-xs py-1 flex-1"
+                    type="text"
+                    value={url}
+                    readOnly
+                  />
+                  <button onClick={handleCopy}>
+                    {copy ? (
+                      <Check className="size-4" />
+                    ) : (
+                      <Copy className="size-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

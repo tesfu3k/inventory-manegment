@@ -17,6 +17,7 @@ import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
 import AddEmployee from "./pages/AddEmployee";
 import AddProduct from "./pages/AddProduct";
+import InviteEmployee from "./pages/InviteEmploye";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="employees/record" element={<AddEmployee />} />
         <Route path="products/record" element={<AddProduct />} />
       </Route>
+      <Route path="employees/record/:id" element={<InviteEmployee />} />
     </Routes>
   );
 };

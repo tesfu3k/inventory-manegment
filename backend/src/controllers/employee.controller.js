@@ -5,6 +5,8 @@ import { supplierModel } from "../models/supplier.model.js";
 import { productModel } from "../models/product.model.js";
 import { saleModel } from "../models/sale.model.js";
 import { purchaseModel } from "../models/purchase.model.js";
+import { invitationModel } from "../models/invitation.model.js";
+import mongoose from "mongoose";
 const registerEmployee = async (req, res) => {
   const {
     firstName,
@@ -282,6 +284,38 @@ const employeeStatus = async (req, res) => {
   }
 };
 
+const genInviteLink = async (req, res) => {
+  const { userId } = req;
+  const expirationDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return res
+      .status(404)
+      .json({ mmessage: "unauthorized", success: false, data: null });
+  try {
+    const invitation = await invitationModel.create({
+      userId,
+      expiredAt: expirationDate,
+    });
+
+    const invitationURL = `${process.env.FRONTEND_URL}/employees/record/${invitation._id}`;
+
+    res.status(201).json({
+      message: "Invitation url created sucessfully",
+      success: true,
+      data: { link: invitationURL },
+    });
+  } catch (error) {
+    console.error("Error generating invitation link:", error);
+    res.status(500).json({
+      message: "Failed to generate link",
+      success: false,
+      data: null,
+    });
+  }
+};
+
+const verifyInviteLink = async (req, res) => {};
+
 const dashboardStatus = async (req, res) => {
   try {
     const today = new Date();
@@ -342,4 +376,5 @@ export {
   getAllEmployee,
   employeeStatus,
   dashboardStatus,
+  genInviteLink,
 };

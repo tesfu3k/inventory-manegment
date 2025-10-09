@@ -7,6 +7,7 @@ import {
   approveEmployee,
   dashboardStatus,
   employeeStatus,
+  genInviteLink,
   getAllEmployee,
   getEmployeeById,
   listApprovedEmployees,
@@ -19,6 +20,9 @@ const route = new Router();
 
 //Public self-registration
 route.post("/register", registerEmployee);
+
+//Admin-only: invitation link generator
+route.post("/invite", protectRoute, adminMiddleware, genInviteLink);
 
 //Admin-only: view pending registrations list
 route.get("/pending", protectRoute, adminMiddleware, listPendingEmployees);
