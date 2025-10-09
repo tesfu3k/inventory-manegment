@@ -6,6 +6,12 @@ const invitationSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     expiredAt: {
       type: Date,
       required: true,

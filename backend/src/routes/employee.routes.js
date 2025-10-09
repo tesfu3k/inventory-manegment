@@ -14,6 +14,7 @@ import {
   listPendingEmployees,
   registerEmployee,
   rejectEmployee,
+  verifyInviteLink,
 } from "../controllers/employee.controller.js";
 
 const route = new Router();
@@ -23,6 +24,9 @@ route.post("/register", registerEmployee);
 
 //Admin-only: invitation link generator
 route.post("/invite", protectRoute, adminMiddleware, genInviteLink);
+
+//Public: verify invite link
+route.get("/invite/:id", verifyInviteLink);
 
 //Admin-only: view pending registrations list
 route.get("/pending", protectRoute, adminMiddleware, listPendingEmployees);

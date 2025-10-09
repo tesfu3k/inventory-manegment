@@ -40,6 +40,7 @@ const EmployeeNavBar = () => {
       setCopy(false);
     }, 1000);
   };
+
   return (
     <div className="text-cyan-800 flex justify-between lg:items-center py-5 max-md:flex-col max-md:gap-4 sticky top-0 bg-[rgb(230,248,252)] z-10">
       <div className="flex gap-3 items-center ">
