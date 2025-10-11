@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import EmployeeSearchBar from "../components/EmployeeSearchBar";
 import { toast } from "react-hot-toast";
+//import EmployeeTableTest from "../components/Table";
 import { employeeColumns } from "../data/data.js";
 import Table from "../components/Table";
 import { useCallback, useEffect, useState } from "react";
@@ -24,10 +25,10 @@ const Employees = () => {
     activeEmployees: "",
     newHires: "",
   });
-
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const requiredConfirmationText = "DELETE";
   const employeeStatus = [
     {
       id: 1,
@@ -103,13 +104,12 @@ const Employees = () => {
   const handleDelete = async () => {
     if (!employeeToDelete) return;
 
-    if (
-      deleteConfirmation.trim().toUpperCase() !==
-      employeeToDelete.firstName.toUpperCase()
-    )
-      return toast.error(
-        `Please type ${employeeToDelete.firstName} to confirm deletion`
+    if (deleteConfirmation.trim().toUpperCase() !== requiredConfirmationText) {
+      toast.error(
+        `Please type ${requiredConfirmationText} to confirm deletion.`
       );
+      return;
+    }
 
     try {
       setIsDeleting(true);
@@ -119,6 +119,7 @@ const Employees = () => {
         }`,
         { withCredentials: true, validateStatus: (status) => status < 500 }
       );
+
       if (data.success) {
         toast.success(data.message || "Employee deleted successfully");
         await fetchEmployees();
@@ -126,6 +127,8 @@ const Employees = () => {
         closeDeleteModal();
         return;
       }
+
+      toast.error(data.message || "Failed to delete employee");
     } catch (error) {
       toast.error(
         error.message || "Something went wrong. Please try again later"
@@ -133,23 +136,6 @@ const Employees = () => {
     } finally {
       setIsDeleting(false);
     }
-    // try {
-    //   const { data } = await axios.delete(
-    //     `${import.meta.env.VITE_BACKEND_URL}/api/employees/${employee._id}`,
-    //     { withCredentials: true, validateStatus: (status) => status < 500 }
-    //   );
-    //   if (data.success) {
-    //     toast.success(data.message || "Employee deleted successfully");
-    //     await fetchEmployees();
-    //     await fetchStatus();
-    //     return;
-    //   }
-    //   toast.error(data.message || "Failed to delete employee");
-    // } catch (error) {
-    //   toast.error(
-    //     error.message || "Something went wrong. Please try again later"
-    //   );
-    // }
   };
 
   const renderData = () => {
@@ -239,7 +225,7 @@ const Employees = () => {
               <Edit size={16} />
             </button>
             <button
-              className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors cursor-pointer"
+              className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
               title="Delete Employee"
               onClick={() => openDeleteModal(employee)}
             >
@@ -266,38 +252,33 @@ const Employees = () => {
       </div>
       <EmployeeSearchBar />
       <Table renderData={renderData} colData={employeeColumns} />
-      {/* <img src="/Portrait_Placeholder.png" alt="Logo" /> */}
-      {/* <EmployeeTableTest /> */}
-
       {employeeToDelete && (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 px-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
-            <h2 className="text-xl text-red-800 mb-4 text-center font-semibold">
+            <h2 className="text-xl font-semibold text-cyan-800 mb-4">
               Confirm Deletion
             </h2>
-            <p className="text-sm text-cyan-700 mb-4 text-justify">
+            <p className="text-sm text-cyan-700 mb-4">
               This will permanently remove{" "}
-              <span className="font-semibold text-red-800">
+              <span className="font-semibold">
                 {employeeToDelete.firstName} {employeeToDelete.lastName}
               </span>{" "}
               from your employees list. Type{" "}
-              <span className="text-red-800 font-semibold">
-                {employeeToDelete.firstName.toUpperCase()}
-              </span>{" "}
-              below to confirm
+              <span className="font-semibold">{requiredConfirmationText}</span>{" "}
+              below to confirm.
             </p>
             <input
               type="text"
               value={deleteConfirmation}
               onChange={(e) => setDeleteConfirmation(e.target.value)}
-              placeholder={`Type ${employeeToDelete.firstName.toUpperCase()} to confirm`}
+              placeholder={`Type ${requiredConfirmationText} to confirm`}
               className="w-full rounded-lg border border-cyan-300 px-3 py-2 outline-0 focus:ring-4 focus:ring-cyan-500/20"
             />
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
                 onClick={closeDeleteModal}
-                className="flex-1 rounded-xl border border-cyan-800 py-2  cursor-pointer hover:bg-cyan-50 active:scale-50"
+                className="flex-1 rounded-xl border border-cyan-800 py-2 text-cyan-800 hover:bg-cyan-50 active:scale-95"
                 disabled={isDeleting}
               >
                 Cancel
@@ -307,9 +288,9 @@ const Employees = () => {
                 onClick={handleDelete}
                 disabled={
                   deleteConfirmation.trim().toUpperCase() !==
-                    employeeToDelete.firstName.toUpperCase() || isDeleting
+                    requiredConfirmationText || isDeleting
                 }
-                className="flex-1 rounded-xl bg-red-600 py-2 text-white hover:text-red-300 cursor-pointer disabled:cursor-not-allowed disabled:bg-red-400 active:scale-95"
+                className="flex-1 rounded-xl bg-red-600 py-2 text-white hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-red-400 active:scale-95"
               >
                 {isDeleting ? "Deleting..." : "Delete"}
               </button>
@@ -317,6 +298,8 @@ const Employees = () => {
           </div>
         </div>
       )}
+      {/* <img src="/Portrait_Placeholder.png" alt="Logo" /> */}
+      {/* <EmployeeTableTest /> */}
     </div>
   );
 };
