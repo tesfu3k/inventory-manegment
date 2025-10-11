@@ -164,24 +164,23 @@ const approveEmployee = async (req, res) => {
 const rejectEmployee = async (req, res) => {
   const employeeId = req.params.id;
   try {
-    const employee = await employeeModel.findOne({
-      _id: employeeId,
-      pendingApproval: true,
-    });
+    const employee = await employeeModel.findById(employeeId);
 
     if (!employee)
       return res.status(404).json({
-        message: "Employee not found or already processed",
+        message: "Employee not found",
         success: false,
         data: null,
       });
 
-    // const userId = employee.userId;
+    const wasPending = employee.pendingApproval;
 
     await employeeModel.findByIdAndDelete(employeeId);
 
     res.status(200).json({
-      message: "Employee registration rejected",
+      message: wasPending
+        ? "Employee registration rejected"
+        : "Employee deleted successfully",
       success: true,
       data: null,
     });

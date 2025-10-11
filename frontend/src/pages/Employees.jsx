@@ -14,7 +14,7 @@ import { toast } from "react-hot-toast";
 //import EmployeeTableTest from "../components/Table";
 import { employeeColumns } from "../data/data.js";
 import Table from "../components/Table";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 const Employees = () => {
@@ -53,37 +53,66 @@ const Employees = () => {
     },
   ];
 
-  useEffect(() => {
-    const getEmployee = async () => {
-      try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/employees/all`,
-          { withCredentials: true }
-        );
-        setEmployees(data.data);
-      } catch (error) {
-        toast.error(
-          error.message || "Something went wrong. Please try again later"
-        );
-      }
-    };
-    getEmployee();
-
-    const fatchStatus = async () => {
-      try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/employees/status`,
-          { withCredentials: true }
-        );
-        setStatus(data.status);
-      } catch (error) {
-        toast.error(
-          error.message || "Something went wrong. Please try again later"
-        );
-      }
-    };
-    fatchStatus();
+  const fetchEmployees = useCallback(async () => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/all`,
+        { withCredentials: true }
+      );
+      setEmployees(data.data || []);
+    } catch (error) {
+      toast.error(
+        error.message || "Something went wrong. Please try again later"
+      );
+    }
   }, []);
+
+  const fetchStatus = useCallback(async () => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/status`,
+        { withCredentials: true }
+      );
+      setStatus((prev) => ({ ...prev, ...(data.status || {}) }));
+    } catch (error) {
+      toast.error(
+        error.message || "Something went wrong. Please try again later"
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEmployees();
+    fetchStatus();
+  }, [fetchEmployees, fetchStatus]);
+
+  const handleDelete = async (employee) => {
+    const confirmDelete = window.confirm(
+      `Delete ${employee.firstName} ${employee.lastName}? This action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/${employee._id}`,
+        { withCredentials: true, validateStatus: (status) => status < 500 }
+      );
+
+      if (data.success) {
+        toast.success(data.message || "Employee deleted successfully");
+        await fetchEmployees();
+        await fetchStatus();
+        return;
+      }
+
+      toast.error(data.message || "Failed to delete employee");
+    } catch (error) {
+      toast.error(
+        error.message || "Something went wrong. Please try again later"
+      );
+    }
+  };
   const renderData = () => {
     return employees.map((employee) => (
       <tr key={employee._id}>
@@ -98,7 +127,7 @@ const Employees = () => {
             <div className="flex-shrink-0 h-12 w-12">
               <img
                 src={employee.avatar}
-                alt={employee.name}
+                alt={`${employee.firstName || ""} ${employee.lastName || ""}`.trim() || "Employee"}
                 className="h-12 w-12 object-cover rounded-full"
               />
             </div>
@@ -169,6 +198,7 @@ const Employees = () => {
             <button
               className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
               title="Delete Employee"
+              onClick={() => handleDelete(employee)}
             >
               <Trash2 size={16} />
             </button>
