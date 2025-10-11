@@ -13,6 +13,7 @@ import {
   listApprovedEmployees,
   listPendingEmployees,
   registerEmployee,
+  registerInvitedEmployee,
   rejectEmployee,
   verifyInviteLink,
 } from "../controllers/employee.controller.js";
@@ -27,6 +28,9 @@ route.post("/invite", protectRoute, adminMiddleware, genInviteLink);
 
 //Public: verify invite link
 route.get("/invite/:id", verifyInviteLink);
+
+// Public: Register invited employee
+route.post("/invite/:id", registerInvitedEmployee);
 
 //Admin-only: view pending registrations list
 route.get("/pending", protectRoute, adminMiddleware, listPendingEmployees);

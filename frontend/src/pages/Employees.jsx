@@ -57,7 +57,7 @@ const Employees = () => {
     const getEmployee = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:3000/api/employees/all",
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/all`,
           { withCredentials: true }
         );
         setEmployees(data.data);
@@ -72,7 +72,7 @@ const Employees = () => {
     const fatchStatus = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:3000/api/employees/status",
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/status`,
           { withCredentials: true }
         );
         setStatus(data.status);

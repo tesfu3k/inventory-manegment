@@ -35,7 +35,7 @@ const InviteEmploye = () => {
     const validateURL = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/api/employees/invite/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/invite/${id}`,
           {
             withCredentials: true,
             validateStatus: (status) => status < 500,
@@ -80,7 +80,7 @@ const InviteEmploye = () => {
     setRegInviteEmployee((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (
       !regInviteEmployee.firstName ||
@@ -95,6 +95,22 @@ const InviteEmploye = () => {
       !regInviteEmployee.address
     )
       return toast.error("Enter all required fields");
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/invite/${id}`,
+        regInviteEmployee,
+        { withCredentials: true, validateStatus: (status) => status < 500 }
+      );
+
+      if (data.success) {
+        toast.success("Registration successful!");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

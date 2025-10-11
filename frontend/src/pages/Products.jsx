@@ -10,7 +10,7 @@ const Products = () => {
   useEffect(() => {
     const fatchProduct = async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/api/inventory/products",
+        `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products`,
         {
           withCredentials: true,
           validateStatus: (status) => status < 500,

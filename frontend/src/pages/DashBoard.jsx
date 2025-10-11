@@ -27,7 +27,7 @@ const DashBoard = () => {
     try {
       const fatchDahboardStatus = async () => {
         const { data } = await axios.get(
-          "http://localhost:3000/api/employees/dashbord-status",
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/dashbord-status`,
           { withCredentials: true }
         );
 

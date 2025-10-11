@@ -45,7 +45,7 @@ const AddEmployee = () => {
       return toast.error("Enter all required fields");
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/employees/register",
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/register`,
         employeeData,
         { withCredentials: true, validateStatus: (status) => status < 500 }
       );

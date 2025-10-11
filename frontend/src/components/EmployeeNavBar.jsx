@@ -21,7 +21,7 @@ const EmployeeNavBar = () => {
   const handleGenerateLink = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/employees/invite",
+        `${import.meta.env.VITE_BACKEND_URL}/api/employees/invite`,
         {},
         { withCredentials: true, validateStatus: (status) => status < 500 }
       );

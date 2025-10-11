@@ -25,9 +25,12 @@ const App = () => {
   useEffect(() => {
     const fatchUser = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/auth/me", {
-          withCredentials: true,
-        });
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
+          {
+            withCredentials: true,
+          }
+        );
         if (data.success) setUser(data.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
