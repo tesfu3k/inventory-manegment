@@ -174,6 +174,20 @@ const rejectEmployee = async (req, res) => {
         data: null,
       });
 
+    if (employee.isActive) {
+      const updatedEmployee = await employeeModel.findByIdAndUpdate(
+        employeeId,
+        { isActive: false, pendingApproval: false },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        message: "Employee marked as inactive",
+        success: true,
+        data: updatedEmployee,
+      });
+    }
+
     const wasPending = employee.pendingApproval;
 
     await employeeModel.findByIdAndDelete(employeeId);
@@ -194,73 +208,58 @@ const rejectEmployee = async (req, res) => {
 };
 
 const updateEmployee = async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    gender,
-    salary,
-    startDate,
-    department,
-    position,
-    phone,
-    address,
-    pendingApproval,
-    isActive,
-  } = req.body;
-  if (
-    !firstName &&
-    !lastName &&
-    !email &&
-    !gender &&
-    !salary &&
-    !startDate &&
-    !department &&
-    !position &&
-    !phone &&
-    !address &&
-    !pendingApproval &&
-    !isActive
-  )
-    return res.status(400).json({
-      message: "At least one feild required tobe update",
-      success: false,
-      data: null,
-    });
   const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(400).json({
-      message: "Valid employee id required",
-      success: false,
-      data: null,
-    });
 
   try {
-    const employee = await employeeModel.findById(id);
-    if (!employee)
+    if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(400).json({
+        message: "Invalid employee id",
         success: false,
-        message: "No emplyee is found to update",
         data: null,
       });
+
+    const allowedFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "gender",
+      "salary",
+      "startDate",
+      "department",
+      "position",
+      "phone",
+      "address",
+      "pendingApproval",
+      "isActive",
+    ];
+
+    const updatePayload = {};
+    allowedFields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        updatePayload[field] = req.body[field];
+      }
+    });
+
+    if (Object.keys(updatePayload).length === 0)
+      return res.status(400).json({
+        message: "No valid fields provided for update",
+        success: false,
+        data: null,
+      });
+
     const updatedEmployee = await employeeModel.findByIdAndUpdate(
       id,
-      {
-        firstName,
-        lastName,
-        email,
-        gender,
-        salary,
-        startDate,
-        department,
-        position,
-        phone,
-        address,
-        pendingApproval,
-        isActive,
-      },
+      updatePayload,
       { new: true }
     );
+
+    if (!updatedEmployee)
+      return res.status(404).json({
+        message: "Employee not found",
+        success: false,
+        data: null,
+      });
+
     res.status(200).json({
       message: "Employee updated successfully",
       success: true,
@@ -566,6 +565,7 @@ export {
   listApprovedEmployees,
   approveEmployee,
   rejectEmployee,
+  updateEmployee,
   listPendingEmployees,
   getEmployeeById,
   getAllEmployee,
@@ -573,5 +573,4 @@ export {
   dashboardStatus,
   genInviteLink,
   verifyInviteLink,
-  updateEmployee,
 };

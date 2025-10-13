@@ -129,8 +129,6 @@ const updateSupplier = async (req, res) => {
       success: true,
       data: updatedSupplier,
     });
-
-    res.status(201);
   } catch (error) {
     res
       .status(500)

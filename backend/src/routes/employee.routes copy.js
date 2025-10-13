@@ -7,6 +7,7 @@ import {
   approveEmployee,
   dashboardStatus,
   employeeStatus,
+  updateEmployee,
   genInviteLink,
   getAllEmployee,
   getEmployeeById,
@@ -15,7 +16,6 @@ import {
   registerEmployee,
   registerInvitedEmployee,
   rejectEmployee,
-  updateEmployee,
   verifyInviteLink,
 } from "../controllers/employee.controller.js";
 
@@ -48,11 +48,11 @@ route.get("/status", protectRoute, adminMiddleware, employeeStatus);
 // Admin: Get dashboard status data
 route.get("/dashbord-status", protectRoute, adminMiddleware, dashboardStatus);
 
+//Admin-only: Update employee details
+route.put("/:id", protectRoute, adminMiddleware, updateEmployee);
+
 //Admin-only: Reject/Delete a pending employee
 route.delete("/:id", protectRoute, adminMiddleware, rejectEmployee);
-
-//Admin-only: update employee details
-route.put("/:id", protectRoute, adminMiddleware, updateEmployee);
 
 //Admin-only: view approved employees list
 route.get("/", protectRoute, adminMiddleware, listApprovedEmployees);
