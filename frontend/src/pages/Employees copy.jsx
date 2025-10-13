@@ -47,7 +47,7 @@ const Employees = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [employeeToView, setEmployeeToView] = useState(null);
-  const [isViewModelOpen, setIsViewModelOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   const [employeeToEdit, setEmployeeToEdit] = useState(null);
   const [isEditSidebarOpen, setIsEditSidebarOpen] = useState(false);
@@ -116,6 +116,18 @@ const Employees = () => {
     fetchStatus();
   }, [fetchEmployees, fetchStatus]);
 
+  const formatDate = (value) => {
+    if (!value) return "—";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+  };
+
   const hydrateUpdateEmployeeData = (employee) => {
     if (!employee) return;
     setUpdateEmpolyeeData({
@@ -149,8 +161,18 @@ const Employees = () => {
     setDeleteConfirmation("");
     setIsDeleting(false);
 
-    setUpdateEmpolyeeData(INITIAL_EMPLOYEE_FORM_STATE);
+    // setUpdateEmpolyeeData(INITIAL_EMPLOYEE_FORM_STATE);
     setIsSaving(false);
+  };
+
+  const openViewModal = (employee) => {
+    setEmployeeToView(employee);
+    setIsViewModalOpen(true);
+  };
+
+  const closeViewModal = () => {
+    setEmployeeToView(null);
+    setIsViewModalOpen(false);
   };
 
   const openEditModel = (employee) => {
@@ -164,18 +186,6 @@ const Employees = () => {
     setUpdateEmpolyeeData(INITIAL_EMPLOYEE_FORM_STATE);
     setIsEditSidebarOpen(false);
   };
-
-  const openViewModal = (employee) => {
-    setEmployeeToView(employee);
-    // hydrateUpdateEmployeeData(employee);
-    setIsViewModelOpen(true);
-  };
-
-  const closeViewModal = () => {
-    setEmployeeToView(null);
-    setIsViewModelOpen(false);
-  };
-
   const handleDelete = async () => {
     if (!employeeToDelete) return;
 
@@ -424,142 +434,126 @@ const Employees = () => {
         </div>
       )}
 
-      {/* Open Employee view form */}
+      {/* Employee details modal */}
       {employeeToView && (
-        <>
-          {/* close view modal */}
+        <div
+          className={`fixed inset-0 z-40 flex items-center justify-center bg-black/30 px-4 transition-opacity duration-500 ${
+            isViewModalOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
+          onClick={closeViewModal}
+        >
           <div
-            className={`fixed inset-0 bg-black/30 z-40 transition-opacity duration-500 ${
-              isViewModelOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            className={`w-full max-w-2xl rounded-2xl bg-white shadow-2xl transition-transform duration-500 ${
+              isViewModalOpen ? "scale-100" : "scale-95"
             }`}
-            onClick={closeViewModal}
-          />
-
-          {/* open view modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
-            <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="flex  items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-cyan-800">
-                  Employee Details
-                </h2>
-                <button
-                  onClick={closeViewModal}
-                  className="rounded-lg p-2 bg-red-300 hover:bg-red-50 transition-colors"
-                >
-                  <X className="text-red-700" />
-                </button>
-              </div>
-
-              {/* Employee Avatar and Basic Info */}
-              <div className="flex items-center gap-4 mb-4 pb-4 border-cyan-200 border-b">
-                <div className="flex-shrink-0">
-                  <img
-                    src={employeeToView.avatar}
-                    alt={`${employeeToView.firstName} ${employeeToView.lastName}`}
-                    className="h-24 w-24 object-cover rounded-full border-4 border-cyan-100"
-                  />
-                </div>
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between border-b border-cyan-100 px-6 py-4">
+              <div className="flex items-center gap-4">
+                <img
+                  src={
+                    employeeToView.avatar || "/Portrait_Placeholder.png"
+                  }
+                  alt={`${employeeToView.firstName || ""} ${
+                    employeeToView.lastName || ""
+                  }`.trim()}
+                  className="h-16 w-16 rounded-full object-cover border border-cyan-200"
+                />
                 <div>
-                  <div className="flex items-end gap-4">
-                    {" "}
-                    <h3 className="text-2xl font-bold text-cyan-800">
-                      {employeeToView.firstName} {employeeToView.lastName}
-                    </h3>{" "}
-                    <div className="bg-cyan-200 rounded-4xl px-2">
-                      {employeeToView.gender}
-                    </div>
-                  </div>
-                  <p className="font-medium text-cyan-600">
-                    {employeeToView.position}
+                  <h2 className="text-xl font-semibold text-cyan-900">
+                    {employeeToView.firstName} {employeeToView.lastName}
+                  </h2>
+                  <p className="text-sm text-cyan-600">
+                    {employeeToView.position || "—"} ·{" "}
+                    {employeeToView.department || "—"}
                   </p>
-                  <div className="mt-2">
-                    <span
-                      className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                        employeeToView.pendingApproval
-                          ? "bg-yellow-100 text-yellow-900"
-                          : employeeToView.isActive
-                          ? "bg-green-100 text-green-900"
-                          : "bg-red-100 text-red-900"
-                      } `}
-                    >
-                      {employeeToView.pendingApproval
-                        ? "Pending Approval"
-                        : employeeToView.isActive
-                        ? "Active"
-                        : "Inactive"}
-                    </span>
-                  </div>
                 </div>
               </div>
+              <button
+                onClick={closeViewModal}
+                className="rounded-full bg-cyan-50 p-2 text-cyan-600 hover:bg-cyan-100"
+                type="button"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-              {/* Details Grid */}
-              <div className="grid grid-cols-2 gap-6">
-                {/* Contact Information */}
-                <div className="space-y-6">
-                  <h4 className="text-lg font-semibold text-cyan-800 mb-3">
-                    Contact Information
-                  </h4>
-                  <div>
-                    <label className="block text-sm font-medium text-cyan-600 mb-1">
-                      Email
-                    </label>{" "}
-                    <p className="text-cyan-800">{employeeToView.email}</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-cyan-600 mb-1">
-                      Phone Number
-                    </label>{" "}
-                    <p className="text-cyan-800">{employeeToView.phone}</p>
-                  </div>
-                </div>
-
-                {/* Work Information */}
-                <div className="space-y-6">
-                  <h4 className="text-lg font-semibold text-cyan-800 mb-3">
-                    Work Information
-                  </h4>
-                  <div>
-                    <label className="block text-sm font-medium text-cyan-600 mb-1">
-                      Department
-                    </label>{" "}
-                    <p className="text-cyan-800">{employeeToView.department}</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-cyan-600 mb-1">
-                      Salary
-                    </label>{" "}
-                    <p className="text-cyan-800 font-semibold">
-                      {employeeToView.salary} ETB
+            <div className="px-6 py-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {[
+                  {
+                    label: "Email",
+                    value: employeeToView.email || "—",
+                  },
+                  {
+                    label: "Phone",
+                    value: employeeToView.phone || "—",
+                  },
+                  {
+                    label: "Gender",
+                    value: employeeToView.gender || "—",
+                  },
+                  {
+                    label: "Start Date",
+                    value: formatDate(employeeToView.startDate),
+                  },
+                  {
+                    label: "Salary",
+                    value: employeeToView.salary
+                      ? `${employeeToView.salary} ETB`
+                      : "—",
+                  },
+                  {
+                    label: "Status",
+                    value: employeeToView.pendingApproval
+                      ? "Pending Approval"
+                      : employeeToView.isActive
+                      ? "Active"
+                      : "Inactive",
+                  },
+                  {
+                    label: "Pending Approval",
+                    value: employeeToView.pendingApproval ? "Yes" : "No",
+                  },
+                  {
+                    label: "Active",
+                    value: employeeToView.isActive ? "Yes" : "No",
+                  },
+                  {
+                    label: "Address",
+                    value: employeeToView.address || "—",
+                  },
+                  {
+                    label: "Employee ID",
+                    value: employeeToView._id || "—",
+                  },
+                ].map(({ label, value }) => (
+                  <div
+                    key={label}
+                    className="rounded-xl border border-cyan-100 bg-cyan-50/40 p-4"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-cyan-500">
+                      {label}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-cyan-900 break-words">
+                      {value}
                     </p>
                   </div>
-                </div>
+                ))}
               </div>
 
-              {/* Action Buttons */}
-              <div className="border-t border-cyan-200 mt-6 pt-6 flex gap-3">
+              <div className="mt-6 flex justify-end">
                 <button
-                  onClick={() => {
-                    closeViewModal();
-                    openEditModel(employeeToView);
-                  }}
+                  onClick={closeViewModal}
+                  className="rounded-xl border border-cyan-800 px-4 py-2 text-cyan-800 hover:bg-cyan-50"
                   type="button"
-                  className="flex-1 bg-cyan-600 rounded-xl py-2 text-white hover:bg-cyan-700 cursor-pointer transition-colors"
-                >
-                  Edit Employee
-                </button>
-                <button
-                  type="button"
-                  onClick={() => closeViewModal()}
-                  className="flex-1 rounded-xl border border-cyan-800 py-2 cursor-pointer hover:bg-cyan-50 "
                 >
                   Close
                 </button>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {/* Open Employee Edit form */}
