@@ -224,7 +224,14 @@ const Employees = () => {
         updateEmployeeData,
         { withCredentials: true, validateStatus: (status) => status < 500 }
       );
-      console.log(data);
+      if (data.success) {
+        toast.success(data.message || "Employee updated sucessfully");
+        await fetchEmployees();
+        await fetchStatus();
+        closeEditModel();
+        return;
+      }
+      toast.error(data.message || "Failed to update emloyee");
     } catch (error) {
       toast.error(
         error.message || "Something went wrong. Please try again later"
