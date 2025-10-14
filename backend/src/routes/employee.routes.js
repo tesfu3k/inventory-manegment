@@ -10,6 +10,7 @@ import {
   genInviteLink,
   getAllEmployee,
   getEmployeeById,
+  getPaginatedEmployeeList,
   listApprovedEmployees,
   listPendingEmployees,
   registerEmployee,
@@ -41,6 +42,9 @@ route.post("/:id/approve", protectRoute, adminMiddleware, approveEmployee);
 
 //Admin-only: All employees list
 route.get("/all", protectRoute, adminMiddleware, getAllEmployee);
+
+//Admin-only: All employees with pagination list
+route.get("/paginat", protectRoute, adminMiddleware, getPaginatedEmployeeList);
 
 // Admin: Get employees status data
 route.get("/status", protectRoute, adminMiddleware, employeeStatus);

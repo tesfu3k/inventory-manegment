@@ -291,6 +291,51 @@ const getAllEmployee = async (req, res) => {
   }
 };
 
+const getPaginatedEmployeeList = async (req, res) => {
+  try {
+    //  Extract pagination parameters from the query string (default page=1, limit=10)
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+    const skip = (page - 1) * limit;
+
+    // Fetch the current page data and total count
+    const [employees, total] = await Promise.all([
+      employeeModel.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit),
+
+      employeeModel.countDocuments(),
+    ]);
+
+    // Calculate total pages and range display (e.g. 1–10 of 124)
+    const totalPages = Math.ceil(total / limit);
+    const from = total === 0 ? 0 : skip + 1;
+    const to = Math.min(skip + limit, total);
+
+    //  Respond with paginated results and meta info
+    res.status(200).json({
+      message: "Employees retrieved successfully",
+      success: true,
+      data: employees,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages,
+        from,
+        to,
+        hasPrev: page > 1,
+        hasNext: page < totalPages,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      data: null,
+    });
+  }
+};
+
 const listApprovedEmployees = async (req, res) => {
   try {
     const getApprovedEmployees = await employeeModel.find({
@@ -574,4 +619,5 @@ export {
   genInviteLink,
   verifyInviteLink,
   updateEmployee,
+  getPaginatedEmployeeList
 };
