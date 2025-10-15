@@ -293,18 +293,15 @@ const getAllEmployee = async (req, res) => {
 
 const getPaginatedEmployeeList = async (req, res) => {
   try {
-    //  Extract pagination parameters from the query string (default page=1, limit=10)
     const page = Math.max(parseInt(req.query.page) || 1, 1);
     const limit = Math.max(parseInt(req.query.limit) || 10, 1);
     const skip = (page - 1) * limit;
 
-    // extract filters
     const { search, department, status } = req.query;
 
-    // Build filter object dynamically
     const filter = {};
 
-    // --- Search text ---
+    //  Search by name/email/phone
     if (search && search.trim() !== "") {
       filter.$or = [
         { firstName: { $regex: search, $options: "i" } },
@@ -314,38 +311,37 @@ const getPaginatedEmployeeList = async (req, res) => {
       ];
     }
 
-    // --- Department filter ---
+    //  Department filter (case-insensitive)
     if (department && department.trim() !== "") {
-      filter.department = department;
+      filter.department = { $regex: `^${department}$`, $options: "i" };
     }
 
-    // --- Status filter ---
+    // Status filter logic
     if (status && status.trim() !== "") {
-      if (status === "Active") filter.isActive = true;
-      else if (status === "pending") filter.pendingApproval = true;
-      else if (status === "Inactive") {
+      if (status === "Active") {
+        filter.isActive = true;
+      } else if (status === "Pending") {
+        filter.pendingApproval = true;
+      } else if (status === "Inactive") {
         filter.isActive = false;
         filter.pendingApproval = false;
       }
     }
 
-    // Fetch the current page data and total count
+    //  Fetch paginated data
     const [employees, total] = await Promise.all([
       employeeModel
         .find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-
       employeeModel.countDocuments(filter),
     ]);
 
-    // Calculate total pages and range display (e.g. 1–10 of 124)
     const totalPages = Math.ceil(total / limit);
     const from = total === 0 ? 0 : skip + 1;
     const to = Math.min(skip + limit, total);
 
-    //  Respond with paginated results and meta info
     res.status(200).json({
       message: "Employees retrieved successfully",
       success: true,

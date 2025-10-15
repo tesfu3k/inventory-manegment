@@ -87,7 +87,7 @@ const Purchases = () => {
   return (
     <div className="px-10 text-cyan-800">
       <Table renderData={renderData} colData={purchaseColumns} />
-      <Pagination />
+      {/* <Pagination /> */}
     </div>
   );
 };

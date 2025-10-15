@@ -7,13 +7,15 @@ const EmployeeSearchBar = ({ onSearch }) => {
   const [department, setDepartment] = useState("");
   const [status, setStatus] = useState("");
 
-  // --- when user types or changes dropdowns ---
+  // --- handle search ---
   const handleSearch = () => {
-    onSearch({
-      query,
-      department,
-      status,
-    });
+    if (typeof onSearch === "function") {
+      onSearch({
+        query,
+        department,
+        status,
+      });
+    }
   };
   return (
     <div className="flex gap-4 relative bg-white mt-5 py-5 px-8 rounded-2xl max-md:flex-col">
@@ -35,15 +37,13 @@ const EmployeeSearchBar = ({ onSearch }) => {
             handleSearch();
           }}
         >
-          <option value="" disabled>
-            All Departments
-          </option>
-          <option value="hr">Human Resources</option>
-          <option value="sales">Sales</option>
-          <option value="it">IT</option>
-          <option value="finance">Finance</option>
-          <option value="marketing">Marketing</option>
-          <option value="operations">Operations</option>
+          <option value="">All Departments</option>
+          <option value="HR">Human Resources</option>
+          <option value="Sales">Sales</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Operations">Operations</option>
         </select>
         <select
           className="border rounded-lg p-2"
@@ -53,12 +53,10 @@ const EmployeeSearchBar = ({ onSearch }) => {
             handleSearch();
           }}
         >
-          <option value="" disabled>
-            Status
-          </option>
+          <option value="">All Status</option>
           <option value="Active">Active</option>
-          <option value="InActive">In Active</option>
           <option value="Pending">Pending</option>
+          <option value="Inactive">Inactive</option>
         </select>
       </div>
     </div>
