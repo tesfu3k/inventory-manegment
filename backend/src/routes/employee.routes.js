@@ -12,6 +12,7 @@ import {
   getEmployeeById,
   getPaginatedEmployeeList,
   listApprovedEmployees,
+  listDepartments,
   listPendingEmployees,
   registerEmployee,
   registerInvitedEmployee,
@@ -46,7 +47,7 @@ route.get("/all", protectRoute, adminMiddleware, getAllEmployee);
 //Admin-only: All employees with pagination list
 route.get("/paginat", protectRoute, adminMiddleware, getPaginatedEmployeeList);
 
-//listDepartments
+//Get all unique departments
 route.get("/departments", listDepartments);
 
 // Admin: Get employees status data

@@ -1,10 +1,13 @@
 import { Search } from "lucide-react";
+import { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
 
 const EmployeeSearchBar = ({ onSearch }) => {
   // --- local states ---
   const [query, setQuery] = useState("");
   const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState([]);
   const [status, setStatus] = useState("");
 
   // --- handle search ---
@@ -30,6 +33,21 @@ const EmployeeSearchBar = ({ onSearch }) => {
     setStatus(value);
     handleSearch({ status: value });
   };
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/departments`,
+          { withCredentials: true }
+        );
+        if (data.success) setDepartments(data.data);
+      } catch (error) {
+        console.error("Failed to fetch departments:", error);
+      }
+    };
+    fetchDepartments();
+  }, []);
   return (
     <div className="flex gap-4 relative bg-white mt-5 py-5 px-8 rounded-2xl max-md:flex-col">
       <Search className="absolute top-7 left-10 " />
@@ -48,12 +66,11 @@ const EmployeeSearchBar = ({ onSearch }) => {
           onChange={handleDepartmentChange}
         >
           <option value="">All Departments</option>
-          <option value="HR">Human Resources</option>
-          <option value="Sales">Sales</option>
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Operations">Operations</option>
+          {departments.map((department) => (
+            <option key={department} value={department}>
+              {department}
+            </option>
+          ))}
         </select>
         <select
           className="border rounded-lg p-2"
