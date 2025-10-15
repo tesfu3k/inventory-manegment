@@ -8,14 +8,27 @@ const EmployeeSearchBar = ({ onSearch }) => {
   const [status, setStatus] = useState("");
 
   // --- handle search ---
-  const handleSearch = () => {
+  const handleSearch = (overrides = {}) => {
     if (typeof onSearch === "function") {
       onSearch({
         query,
         department,
         status,
+        ...overrides,
       });
     }
+  };
+
+  const handleDepartmentChange = (event) => {
+    const value = event.target.value;
+    setDepartment(value);
+    handleSearch({ department: value });
+  };
+
+  const handleStatusChange = (event) => {
+    const value = event.target.value;
+    setStatus(value);
+    handleSearch({ status: value });
   };
   return (
     <div className="flex gap-4 relative bg-white mt-5 py-5 px-8 rounded-2xl max-md:flex-col">
@@ -32,10 +45,7 @@ const EmployeeSearchBar = ({ onSearch }) => {
         <select
           className="border rounded-lg p-2"
           value={department}
-          onChange={(e) => {
-            setDepartment(e.target.value);
-            handleSearch();
-          }}
+          onChange={handleDepartmentChange}
         >
           <option value="">All Departments</option>
           <option value="HR">Human Resources</option>
@@ -48,10 +58,7 @@ const EmployeeSearchBar = ({ onSearch }) => {
         <select
           className="border rounded-lg p-2"
           value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-            handleSearch();
-          }}
+          onChange={handleStatusChange}
         >
           <option value="">All Status</option>
           <option value="Active">Active</option>
