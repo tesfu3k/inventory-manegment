@@ -9,7 +9,8 @@
     "dev": "node --watch src/main.js",
     "seed:employees": "node --env-file=.env scripts/seed-employees.js",
     "seed:employees:reset": "RESET=true node --env-file=.env scripts/seed-employees.js",
-    "seed:employees:overwrite": "OVERWRITE=true node --env-file=.env scripts/seed-employees.js"
+    "seed:employees:overwrite": "OVERWRITE=true node --env-file=.env scripts/seed-employees.js",
+    "seed:products": "node --env-file=.env scripts/seed-products.js"
   },
   "keywords": [],
   "author": "",
