@@ -291,6 +291,24 @@ const getAllEmployee = async (req, res) => {
   }
 };
 
+const listDepartments = async (req, res) => {
+  try {
+    const departments = await employeeModel.distinct("department");
+    res.status(200).json({
+      message: "Departments retrieved successfully",
+      success: true,
+      data: departments.filter(Boolean).sort(),
+    });
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch departments",
+      data: [],
+    });
+  }
+};
+
 const getPaginatedEmployeeList = async (req, res) => {
   try {
     const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -651,4 +669,5 @@ export {
   verifyInviteLink,
   updateEmployee,
   getPaginatedEmployeeList,
+  listDepartments,
 };

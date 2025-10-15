@@ -46,6 +46,9 @@ route.get("/all", protectRoute, adminMiddleware, getAllEmployee);
 //Admin-only: All employees with pagination list
 route.get("/paginat", protectRoute, adminMiddleware, getPaginatedEmployeeList);
 
+//listDepartments
+route.get("/departments", listDepartments);
+
 // Admin: Get employees status data
 route.get("/status", protectRoute, adminMiddleware, employeeStatus);
 
