@@ -50,18 +50,6 @@ const ProductNavBar = () => {
 
           <div className="flex flex-col">
             <label className="text-xs text-cyan-500 font-medium">
-              Supplier
-            </label>
-            <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">
-              <option>All Suppliers</option>
-              <option>Supplier A</option>
-              <option>Supplier B</option>
-              <option>Supplier C</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs text-cyan-500 font-medium">
               Availability
             </label>
             <select className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none">

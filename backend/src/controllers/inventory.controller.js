@@ -363,11 +363,94 @@ const addProducts = async (req, res) => {
 
 const listProducts = async (req, res) => {
   try {
-    const products = await productModel.find({});
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.max(parseInt(req.query.page) || 10, 1);
+    const skip = (page - 1) * limit;
+
+    const { search, catagory, status, sort } = req.query;
+
+    const filter = {};
+
+    // Search by product name/price/stock
+    if (search && search.trim() !== "") {
+      filter.$or = [
+        { name: { $regex: search, $opttions: "i" } },
+        { unitPrice: { $regex: search, $opttions: "i" } },
+        { stockQuantity: { $regex: search, $opttions: "i" } },
+      ];
+    }
+
+    // Catagory filter (case-insensitive)
+    if (catagory && catagory.trim() !== "") {
+      filter.catagory = { $regex: `^${catagory}$`, $opttions: "i" };
+    }
+
+    // Status filter (case-insensitive)
+    if (status && status.trim() !== "") {
+      if (status === "Out of Stock") {
+        stockQuantity === 0;
+      } else if (status === "Low Stock") {
+        stockQuantity <= lowStockThreshed;
+      } else if (status === "In Stock") {
+        stockQuantity >= lowStockThreshed;
+      }
+    }
+
+    // --- Sorting logic ---
+
+    if (sort) {
+      switch (sort) {
+        case "date_asc":
+          sortOption = { createdAt: 1 };
+          break;
+        case "date_desc":
+          sortOption = { createdAt: -1 };
+          break;
+        case "pric_asc":
+          sortOption = { unitPrice: 1 };
+          break;
+        case "pric_desc":
+          sortOption = { unitPrice: -1 };
+          break;
+        case "stock_asc":
+          sortOption = { stockQuantity: 1 };
+          break;
+        case "stock_desc":
+          sortOption = { stockQuantity: -1 };
+          break;
+        case "name_asc":
+          sortOption = { name: 1 };
+          break;
+        case "name_desc":
+          sortOption = { name: -1 };
+          break;
+      }
+    }
+
+    //  Fetch paginated data
+    const [products, total] = await Promise.all([
+      productModel.find(filter).sort(sortOption).skip(skip).limit(limit),
+      productModel.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    const from = total === 0 ? 0 : skip + 1;
+    const to = Math.min(skip + limit, total);
+
     res.status(200).json({
       message: "products are successfully retrived ",
       success: true,
       data: products,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages,
+        from,
+        to,
+        hasPrev: page > 1,
+        hasNext: page < totalPages,
+      },
     });
   } catch (error) {
     res

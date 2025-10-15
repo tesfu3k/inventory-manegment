@@ -18,8 +18,7 @@ const Products = () => {
       );
       if (data.success) {
         setProducts(data.data);
-        console.log(data.data);
-        return toast.success(data.message);
+        return;
       }
       if (!data.success) return toast.error(data.message);
     };
