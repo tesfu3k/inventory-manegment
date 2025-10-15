@@ -364,40 +364,41 @@ const addProducts = async (req, res) => {
 const listProducts = async (req, res) => {
   try {
     const page = Math.max(parseInt(req.query.page) || 1, 1);
-    const limit = Math.max(parseInt(req.query.page) || 10, 1);
+    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
     const skip = (page - 1) * limit;
 
-    const { search, catagory, status, sort } = req.query;
+    const { search, category, status, sort } = req.query;
 
     const filter = {};
+    let sortOption = {};
+    const lowStockThreshold = 10; // example threshold
 
-    // Search by product name/price/stock
+    // --- Search filter ---
     if (search && search.trim() !== "") {
       filter.$or = [
-        { name: { $regex: search, $opttions: "i" } },
-        { unitPrice: { $regex: search, $opttions: "i" } },
-        { stockQuantity: { $regex: search, $opttions: "i" } },
+        { name: { $regex: search, $options: "i" } },
+        { unitPrice: { $regex: search, $options: "i" } },
+        { stockQuantity: { $regex: search, $options: "i" } },
       ];
     }
 
-    // Catagory filter (case-insensitive)
-    if (catagory && catagory.trim() !== "") {
-      filter.catagory = { $regex: `^${catagory}$`, $opttions: "i" };
+    // --- Category filter (case-insensitive) ---
+    if (category && category.trim() !== "") {
+      filter.category = { $regex: `^${category}$`, $options: "i" };
     }
 
-    // Status filter (case-insensitive)
+    // --- Status filter ---
     if (status && status.trim() !== "") {
       if (status === "Out of Stock") {
-        stockQuantity === 0;
+        filter.stockQuantity = 0;
       } else if (status === "Low Stock") {
-        stockQuantity <= lowStockThreshed;
+        filter.stockQuantity = { $gt: 0, $lt: lowStockThreshold };
       } else if (status === "In Stock") {
-        stockQuantity >= lowStockThreshed;
+        filter.stockQuantity = { $gte: lowStockThreshold };
       }
     }
 
     // --- Sorting logic ---
-
     if (sort) {
       switch (sort) {
         case "date_asc":
@@ -406,10 +407,10 @@ const listProducts = async (req, res) => {
         case "date_desc":
           sortOption = { createdAt: -1 };
           break;
-        case "pric_asc":
+        case "price_asc":
           sortOption = { unitPrice: 1 };
           break;
-        case "pric_desc":
+        case "price_desc":
           sortOption = { unitPrice: -1 };
           break;
         case "stock_asc":
@@ -424,10 +425,12 @@ const listProducts = async (req, res) => {
         case "name_desc":
           sortOption = { name: -1 };
           break;
+        default:
+          sortOption = { createdAt: -1 };
       }
     }
 
-    //  Fetch paginated data
+    // --- Fetch data ---
     const [products, total] = await Promise.all([
       productModel.find(filter).sort(sortOption).skip(skip).limit(limit),
       productModel.countDocuments(filter),
@@ -438,7 +441,7 @@ const listProducts = async (req, res) => {
     const to = Math.min(skip + limit, total);
 
     res.status(200).json({
-      message: "products are successfully retrived ",
+      message: "Products retrieved successfully",
       success: true,
       data: products,
       meta: {
@@ -453,10 +456,13 @@ const listProducts = async (req, res) => {
       },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error", success: false, data: null });
-    console.log(error.message);
+    console.error("Error listing products:", error.message);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      data: null,
+      error: error.message,
+    });
   }
 };
 

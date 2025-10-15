@@ -14,10 +14,12 @@ const Products = () => {
         {
           withCredentials: true,
           validateStatus: (status) => status < 500,
+          params: {},
         }
       );
       if (data.success) {
         setProducts(data.data);
+        console.log(data.meta);
         return;
       }
       if (!data.success) return toast.error(data.message);
