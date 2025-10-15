@@ -22,6 +22,14 @@ const EmployeeSearchBar = ({ onSearch }) => {
     }
   };
 
+  //Debounced Implementation
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      handleSearch();
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [query, department, status]);
+
   const handleDepartmentChange = (event) => {
     const value = event.target.value;
     setDepartment(value);
