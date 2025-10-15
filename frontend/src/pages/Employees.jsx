@@ -68,6 +68,12 @@ const Employees = () => {
     hasNext: false,
   });
 
+  const [filters, setFilters] = useState({
+    query: "",
+    department: "",
+    status: "",
+  });
+
   const employeeStatus = [
     {
       id: 1,
@@ -103,9 +109,16 @@ const Employees = () => {
         {
           withCredentials: true,
           validateStatus: (status) => status < 500,
-          params: { page, limit },
+          params: {
+            page,
+            limit,
+            search: filters.query,
+            department: filters.department,
+            status: filters.status,
+          },
         }
       );
+
       setEmployees(data.data || []);
       setMeta(data.meta || {});
     } catch (error) {
@@ -113,7 +126,7 @@ const Employees = () => {
         error.message || "Something went wrong. Please try again later"
       );
     }
-  }, [page, limit]);
+  }, [page, limit, filters]);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -388,7 +401,12 @@ const Employees = () => {
           />
         ))}
       </div>
-      <EmployeeSearchBar />
+      <EmployeeSearchBar
+        onSearch={(values) => {
+          setFilters(values);
+          setPage(1);
+        }}
+      />
       <Table renderData={renderData} colData={employeeColumns} />
       {/* <img src="/Portrait_Placeholder.png" alt="Logo" /> */}
 

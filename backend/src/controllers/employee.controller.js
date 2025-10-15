@@ -298,11 +298,46 @@ const getPaginatedEmployeeList = async (req, res) => {
     const limit = Math.max(parseInt(req.query.limit) || 10, 1);
     const skip = (page - 1) * limit;
 
+    // extract filters
+    const { search, department, status } = req.query;
+
+    // Build filter object dynamically
+    const filter = {};
+
+    // --- Search text ---
+    if (search && search.trim() !== "") {
+      filter.$or = [
+        { firstName: { $regex: search, $options: "i" } },
+        { lastName: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { phone: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // --- Department filter ---
+    if (department && department.trim() !== "") {
+      filter.department = department;
+    }
+
+    // --- Status filter ---
+    if (status && status.trim() !== "") {
+      if (status === "Active") filter.isActive = true;
+      else if (status === "pending") filter.pendingApproval = true;
+      else if (status === "Inactive") {
+        filter.isActive = false;
+        filter.pendingApproval = false;
+      }
+    }
+
     // Fetch the current page data and total count
     const [employees, total] = await Promise.all([
-      employeeModel.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      employeeModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
 
-      employeeModel.countDocuments(),
+      employeeModel.countDocuments(filter),
     ]);
 
     // Calculate total pages and range display (e.g. 1–10 of 124)
@@ -619,5 +654,5 @@ export {
   genInviteLink,
   verifyInviteLink,
   updateEmployee,
-  getPaginatedEmployeeList
+  getPaginatedEmployeeList,
 };
