@@ -10,7 +10,7 @@ const baseProducts = [
     name: "Wireless Mouse",
     description: "Ergonomic wireless mouse with USB receiver",
     unitPrice: 350,
-    catagory: "Electronics",
+    category: "Electronics",
     lowStockThreshed: 10,
     stockQuantity: 25,
   },
@@ -18,7 +18,7 @@ const baseProducts = [
     name: "Mechanical Keyboard",
     description: "RGB backlit keyboard with blue switches",
     unitPrice: 1200,
-    catagory: "Electronics",
+    category: "Electronics",
     lowStockThreshed: 10,
     stockQuantity: 8,
   },
@@ -26,7 +26,7 @@ const baseProducts = [
     name: "USB-C Charger",
     description: "Fast charging USB-C 65W power adapter",
     unitPrice: 650,
-    catagory: "Accessories",
+    category: "Accessories",
     lowStockThreshed: 15,
     stockQuantity: 3,
   },
@@ -34,7 +34,7 @@ const baseProducts = [
     name: "Office Chair",
     description: "Adjustable office chair with lumbar support",
     unitPrice: 5200,
-    catagory: "Furniture",
+    category: "Furniture",
     lowStockThreshed: 5,
     stockQuantity: 12,
   },
@@ -42,7 +42,7 @@ const baseProducts = [
     name: "Notebook A5",
     description: "A5 size ruled notebook (100 pages)",
     unitPrice: 45,
-    catagory: "Stationery",
+    category: "Stationery",
     lowStockThreshed: 20,
     stockQuantity: 60,
   },
@@ -50,7 +50,7 @@ const baseProducts = [
     name: "Desk Lamp",
     description: "LED desk lamp with brightness control",
     unitPrice: 850,
-    catagory: "Electronics",
+    category: "Electronics",
     lowStockThreshed: 8,
     stockQuantity: 5,
   },
@@ -96,7 +96,8 @@ const productNames = [
   "Shoes",
 ];
 
-for (let i = 0; i < 94; i++) {
+// 👇 Generate 194 random products (for total = 200)
+for (let i = 0; i < 194; i++) {
   const category = categories[Math.floor(Math.random() * categories.length)];
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const item = productNames[Math.floor(Math.random() * productNames.length)];
@@ -111,7 +112,7 @@ for (let i = 0; i < 94; i++) {
     name,
     description,
     unitPrice,
-    catagory: category,
+    category,
     lowStockThreshed,
     stockQuantity,
   });
@@ -128,7 +129,7 @@ function toProductDoc(raw) {
     name: normalizeText(raw.name),
     description: normalizeText(raw.description),
     unitPrice: Number(raw.unitPrice) || 0,
-    catagory: normalizeText(raw.catagory),
+    category: normalizeText(raw.category),
     lowStockThreshed: Number(raw.lowStockThreshed) || 10,
     stockQuantity: Number(raw.stockQuantity) || 0,
   };
@@ -173,6 +174,7 @@ async function run() {
 
   const result = await productModel.bulkWrite(ops, { ordered: false });
   console.log("✅ Product seeding complete:");
+  console.log(`  Total inserted/upserted: ${baseProducts.length} products`);
   console.log(
     `  Upserted: ${result.upsertedCount ?? 0}, Matched: ${
       result.matchedCount ?? 0

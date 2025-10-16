@@ -28,7 +28,7 @@ const Products = () => {
   const [sort, setSort] = useState("");
 
   useEffect(() => {
-    const fatchProduct = async () => {
+    const fatchProducts = async () => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products`,
         {
@@ -47,14 +47,14 @@ const Products = () => {
       if (data.success) {
         setProducts(data.data || []);
         setMeta(data.meta || {});
-        console.log(meta);
-        console.log(data);
         return;
       }
       if (!data.success) return toast.error(data.message);
     };
-    fatchProduct();
+    const delay = setTimeout(fatchProducts, 400);
+    return () => clearTimeout(delay);
   }, [page, limit, sort, filters]);
+
   const renderData = () => {
     return products.map((product) => (
       <tr key={product._id}>
@@ -79,9 +79,9 @@ const Products = () => {
           </div>
         </td>
 
-        {/* catagory */}
+        {/* category */}
         <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm font-medium">{product.catagory}</div>
+          <div className="text-sm font-medium">{product.category}</div>
         </td>
 
         {/* Unit price */}
@@ -142,7 +142,20 @@ const Products = () => {
 
   return (
     <div className="px-10 text-cyan-800">
-      <ProductNavBar />
+      <ProductNavBar
+        onFiltersChange={(updateFn) => {
+          setfilters((prev) => {
+            const next =
+              typeof updateFn === "function" ? updateFn(prev) : updateFn;
+            return next;
+          });
+          setPage(1);
+        }}
+        onSortChange={(value) => {
+          setSort(value);
+          setPage(1);
+        }}
+      />
       <Table renderData={renderData} colData={productColumns} />
       <Pagination
         page={page}

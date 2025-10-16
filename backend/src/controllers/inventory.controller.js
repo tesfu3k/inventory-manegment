@@ -371,7 +371,7 @@ const listProducts = async (req, res) => {
 
     const filter = {};
     let sortOption = {};
-    const lowStockThreshold = 10; // example threshold
+    // const lowStockThreshold = 10; // example threshold
 
     // --- Search filter ---
     if (search && search.trim() !== "") {
@@ -392,9 +392,16 @@ const listProducts = async (req, res) => {
       if (status === "Out of Stock") {
         filter.stockQuantity = 0;
       } else if (status === "Low Stock") {
-        filter.stockQuantity = { $gt: 0, $lt: lowStockThreshold };
+        // Compare stockQuantity to product's own lowStockThreshed
+        filter.$expr = {
+          $and: [
+            { $gt: ["$stockQuantity", 0] },
+            { $lte: ["$stockQuantity", "$lowStockThreshed"] },
+          ],
+        };
       } else if (status === "In Stock") {
-        filter.stockQuantity = { $gte: lowStockThreshold };
+        // stockQuantity greater than lowStockThreshed
+        filter.$expr = { $gt: ["$stockQuantity", "$lowStockThreshed"] };
       }
     }
 

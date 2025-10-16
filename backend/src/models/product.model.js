@@ -17,7 +17,7 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     lowStockThreshed: { type: Number, default: 10 },
-    catagory: String,
+    category: String,
   },
   { timestamps: true }
 );
