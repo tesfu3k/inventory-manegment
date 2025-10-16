@@ -29,15 +29,6 @@ const Products = () => {
 
   useEffect(() => {
     const fatchProducts = async () => {
-      console.log("🔍 Sending query params:", {
-        page,
-        limit,
-        sort,
-        search: filters.query,
-        category: filters.category,
-        status: filters.status,
-      });
-
       const { data } = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products`,
         {
@@ -151,20 +142,7 @@ const Products = () => {
 
   return (
     <div className="px-10 text-cyan-800">
-      <ProductNavBar
-        onFiltersChange={(updateFn) => {
-          setfilters((prev) => {
-            const next =
-              typeof updateFn === "function" ? updateFn(prev) : updateFn;
-            return next;
-          });
-          setPage(1);
-        }}
-        onSortChange={(value) => {
-          setSort(value);
-          setPage(1);
-        }}
-      />
+      <ProductNavBar onFiltersChange={setfilters} onSortChange={setSort} />
       <Table renderData={renderData} colData={productColumns} />
       <Pagination
         page={page}
@@ -178,3 +156,20 @@ const Products = () => {
 };
 
 export default Products;
+
+{
+  /* <ProductNavBar
+        onFiltersChange={(updateFn) => {
+          setfilters((prev) => {
+            const next =
+              typeof updateFn === "function" ? updateFn(prev) : updateFn;
+            return next;
+          });
+          setPage(1);
+        }}
+        onSortChange={(value) => {
+          setSort(value);
+          setPage(1);
+        }}
+      /> */
+}

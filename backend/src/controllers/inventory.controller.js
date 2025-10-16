@@ -361,6 +361,24 @@ const addProducts = async (req, res) => {
   }
 };
 
+const listProductCategory = async (req, res) => {
+  try {
+    const category = await productModel.distinct("category");
+    res.status(200).json({
+      message: "category retrived successfully",
+      success: true,
+      data: category.filter(Boolean).sort(),
+    });
+  } catch (error) {
+    console.error("Error fetching category", error);
+    res.status(500).json({
+      message: "failed to fetch category",
+      success: false,
+      data: [],
+    });
+  }
+};
+
 const listProducts = async (req, res) => {
   try {
     const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -1132,4 +1150,5 @@ export {
   deletePurchase,
   deleteSale,
   getLowStockProducts,
+  listProductCategory,
 };

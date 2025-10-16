@@ -20,6 +20,7 @@ import {
   getSaleById,
   getSupplierById,
   listCustomers,
+  listProductCategory,
   listProducts,
   listPurchases,
   listSales,
@@ -52,6 +53,7 @@ route.delete("/customer/:id", protectRoute, adminMiddleware, deleteCustomer);
 // Products routes
 route.post("/products", protectRoute, adminMiddleware, addProducts);
 route.get("/products", protectRoute, adminMiddleware, listProducts);
+route.get("/products/category", listProductCategory); // get unique category
 route.get("/product/:id", protectRoute, adminMiddleware, getProductById);
 route.put("/product/:id", protectRoute, adminMiddleware, updateProduct);
 route.delete("/product/:id", protectRoute, adminMiddleware, deleteProduct);

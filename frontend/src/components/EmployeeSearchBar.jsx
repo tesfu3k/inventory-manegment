@@ -49,7 +49,7 @@ const EmployeeSearchBar = ({ onSearch }) => {
           `${import.meta.env.VITE_BACKEND_URL}/api/employees/departments`,
           { withCredentials: true }
         );
-        if (data.success) setDepartments(data.data);
+        if (data.success) return setDepartments(data.data);
       } catch (error) {
         console.error("Failed to fetch departments:", error);
       }

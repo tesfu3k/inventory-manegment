@@ -1,7 +1,24 @@
+import axios from "axios";
 import { Package2, PackagePlus, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const ProductNavBar = ({ onFiltersChange, onSortChange }) => {
+  const [categorys, setCategorys] = useState([]);
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products/category`,
+          { withCredentials: true }
+        );
+        if (data.success) return setCategorys(data.data);
+      } catch (error) {
+        console.error("Failed to fetch category", error);
+      }
+    };
+    fetchCategory();
+  }, []);
   return (
     <div>
       <div className="text-cyan-800 flex justify-between lg:items-center py-5 max-md:flex-col max-md:gap-4 sticky top-0 bg-[rgb(230,248,252)]">
@@ -52,10 +69,12 @@ const ProductNavBar = ({ onFiltersChange, onSortChange }) => {
               className="w-40 mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm focus:ring-cyan-400 focus:outline-none"
             >
               <option value="">All Categories</option>
-              <option value={"Electronics"}>Electronics</option>
-              <option value={"Clothing"}>Clothing</option>
-              <option value={"Home & Garden"}>Home & Garden</option>
-              <option value={"Sports"}>Sports</option>
+
+              {categorys.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
           </div>
 
