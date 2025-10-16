@@ -29,6 +29,15 @@ const Products = () => {
 
   useEffect(() => {
     const fatchProducts = async () => {
+      console.log("🔍 Sending query params:", {
+        page,
+        limit,
+        sort,
+        search: filters.query,
+        category: filters.category,
+        status: filters.status,
+      });
+
       const { data } = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products`,
         {

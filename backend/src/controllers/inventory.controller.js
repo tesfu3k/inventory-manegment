@@ -371,15 +371,25 @@ const listProducts = async (req, res) => {
 
     const filter = {};
     let sortOption = {};
-    // const lowStockThreshold = 10; // example threshold
 
-    // --- Search filter ---
+    // --- Search filter (safe for both text and numbers) ---
     if (search && search.trim() !== "") {
-      filter.$or = [
+      const numericSearch = Number(search);
+      const isNumeric = !isNaN(numericSearch);
+
+      const orConditions = [
         { name: { $regex: search, $options: "i" } },
-        { unitPrice: { $regex: search, $options: "i" } },
-        { stockQuantity: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
       ];
+
+      if (isNumeric) {
+        orConditions.push({ unitPrice: numericSearch });
+        orConditions.push({ stockQuantity: numericSearch });
+        orConditions.push({ lowStockThreshed: numericSearch });
+      }
+
+      filter.$or = orConditions;
     }
 
     // --- Category filter (case-insensitive) ---
@@ -392,7 +402,6 @@ const listProducts = async (req, res) => {
       if (status === "Out of Stock") {
         filter.stockQuantity = 0;
       } else if (status === "Low Stock") {
-        // Compare stockQuantity to product's own lowStockThreshed
         filter.$expr = {
           $and: [
             { $gt: ["$stockQuantity", 0] },
@@ -400,7 +409,6 @@ const listProducts = async (req, res) => {
           ],
         };
       } else if (status === "In Stock") {
-        // stockQuantity greater than lowStockThreshed
         filter.$expr = { $gt: ["$stockQuantity", "$lowStockThreshed"] };
       }
     }
@@ -437,7 +445,6 @@ const listProducts = async (req, res) => {
       }
     }
 
-    // --- Fetch data ---
     const [products, total] = await Promise.all([
       productModel.find(filter).sort(sortOption).skip(skip).limit(limit),
       productModel.countDocuments(filter),
@@ -463,7 +470,7 @@ const listProducts = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error listing products:", error.message);
+    console.error("Error listing products:", error);
     res.status(500).json({
       message: "Internal server error",
       success: false,
