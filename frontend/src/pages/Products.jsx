@@ -1,12 +1,32 @@
-import { Edit, Eye, Trash2 } from "lucide-react";
+import { Edit, Eye, Search, Trash2 } from "lucide-react";
 import ProductNavBar from "../components/ProductNavBar";
 import Table from "../components/Table";
 import { productColumns } from "../data/data.js";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Pagination from "../components/Pagination.jsx";
 const Products = () => {
   const [products, setProducts] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [meta, setMeta] = useState({
+    total: 0,
+    totalPages: 1,
+    from: 0,
+    to: 0,
+    hasPrev: false,
+    hasNext: false,
+  });
+  const [filters, setfilters] = useState({
+    query: "",
+    status: "",
+    catagory: "",
+  });
+
+  const [sort, setSort] = useState("");
+
   useEffect(() => {
     const fatchProduct = async () => {
       const { data } = await axios.get(
@@ -14,12 +34,21 @@ const Products = () => {
         {
           withCredentials: true,
           validateStatus: (status) => status < 500,
-          params: {},
+          params: {
+            page,
+            limit,
+            sort,
+            search: filters.query,
+            catagory: filters.catagory,
+            status: filters.status,
+          },
         }
       );
       if (data.success) {
-        setProducts(data.data);
-        console.log(data.meta);
+        setProducts(data.data || []);
+        setMeta(data.meta || {});
+        console.log(meta);
+        console.log(data);
         return;
       }
       if (!data.success) return toast.error(data.message);
@@ -115,6 +144,13 @@ const Products = () => {
     <div className="px-10 text-cyan-800">
       <ProductNavBar />
       <Table renderData={renderData} colData={productColumns} />
+      <Pagination
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        meta={meta}
+      />
     </div>
   );
 };
