@@ -22,7 +22,7 @@ const Products = () => {
   const [filters, setfilters] = useState({
     query: "",
     status: "",
-    catagory: "",
+    category: "",
   });
 
   const [sort, setSort] = useState("");
@@ -39,7 +39,7 @@ const Products = () => {
             limit,
             sort,
             search: filters.query,
-            catagory: filters.catagory,
+            category: filters.category,
             status: filters.status,
           },
         }
@@ -54,7 +54,7 @@ const Products = () => {
       if (!data.success) return toast.error(data.message);
     };
     fatchProduct();
-  }, []);
+  }, [page, limit, sort, filters]);
   const renderData = () => {
     return products.map((product) => (
       <tr key={product._id}>
