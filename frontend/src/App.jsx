@@ -16,6 +16,8 @@ import Sales from "./pages/Sales";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
 import AddEmployee from "./pages/AddEmployee";
+import AddProduct from "./pages/AddProduct";
+import InviteEmployee from "./pages/InviteEmploye";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
@@ -24,9 +26,12 @@ const App = () => {
   useEffect(() => {
     const fatchUser = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/auth/me", {
-          withCredentials: true,
-        });
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
+          {
+            withCredentials: true,
+          }
+        );
         if (data.success) setUser(data.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -67,7 +72,9 @@ const App = () => {
         <Route path="customers" element={<Customers />} />
         <Route path="settings" element={<Settings />} />
         <Route path="employees/record" element={<AddEmployee />} />
+        <Route path="products/record" element={<AddProduct />} />
       </Route>
+      <Route path="employees/record/:id" element={<InviteEmployee />} />
     </Routes>
   );
 };

@@ -10,7 +10,7 @@ const LogOut = ({ collapsed }) => {
   const handleLogOut = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/auth/sign-out",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/sign-out`,
         undefined,
         {
           validateStatus: (status) => status < 500,

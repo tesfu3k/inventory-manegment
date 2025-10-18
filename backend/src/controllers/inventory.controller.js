@@ -129,8 +129,6 @@ const updateSupplier = async (req, res) => {
       success: true,
       data: updatedSupplier,
     });
-
-    res.status(201);
   } catch (error) {
     res
       .status(500)
@@ -363,19 +361,140 @@ const addProducts = async (req, res) => {
   }
 };
 
-const listProducts = async (req, res) => {
+const listProductCategory = async (req, res) => {
   try {
-    const products = await productModel.find({});
+    const category = await productModel.distinct("category");
     res.status(200).json({
-      message: "products are successfully retrived ",
+      message: "category retrived successfully",
       success: true,
-      data: products,
+      data: category.filter(Boolean).sort(),
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error", success: false, data: null });
-    console.log(error.message);
+    console.error("Error fetching category", error);
+    res.status(500).json({
+      message: "failed to fetch category",
+      success: false,
+      data: [],
+    });
+  }
+};
+
+const listProducts = async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+    const skip = (page - 1) * limit;
+
+    const { search, category, status, sort } = req.query;
+
+    const filter = {};
+    let sortOption = {};
+
+    // --- Search filter (safe for both text and numbers) ---
+    if (search && search.trim() !== "") {
+      const numericSearch = Number(search);
+      const isNumeric = !isNaN(numericSearch);
+
+      const orConditions = [
+        { name: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+
+      if (isNumeric) {
+        orConditions.push({ unitPrice: numericSearch });
+        orConditions.push({ stockQuantity: numericSearch });
+        orConditions.push({ lowStockThreshed: numericSearch });
+      }
+
+      filter.$or = orConditions;
+    }
+
+    // --- Category filter (case-insensitive) ---
+    if (category && category.trim() !== "") {
+      filter.category = { $regex: `^${category}$`, $options: "i" };
+    }
+
+    // --- Status filter ---
+    if (status && status.trim() !== "") {
+      if (status === "Out of Stock") {
+        filter.stockQuantity = 0;
+      } else if (status === "Low Stock") {
+        filter.$expr = {
+          $and: [
+            { $gt: ["$stockQuantity", 0] },
+            { $lte: ["$stockQuantity", "$lowStockThreshed"] },
+          ],
+        };
+      } else if (status === "In Stock") {
+        filter.$expr = { $gt: ["$stockQuantity", "$lowStockThreshed"] };
+      }
+    }
+
+    // --- Sorting logic ---
+    if (sort) {
+      switch (sort) {
+        case "date_asc":
+          sortOption = { createdAt: 1 };
+          break;
+        case "date_desc":
+          sortOption = { createdAt: -1 };
+          break;
+        case "price_asc":
+          sortOption = { unitPrice: 1 };
+          break;
+        case "price_desc":
+          sortOption = { unitPrice: -1 };
+          break;
+        case "stock_asc":
+          sortOption = { stockQuantity: 1 };
+          break;
+        case "stock_desc":
+          sortOption = { stockQuantity: -1 };
+          break;
+        case "name_asc":
+          sortOption = { name: 1 };
+          break;
+        case "name_desc":
+          sortOption = { name: -1 };
+          break;
+        default:
+          sortOption = { createdAt: -1 };
+      }
+    }
+
+    const [products, total] = await Promise.all([
+      productModel.find(filter).sort(sortOption).skip(skip).limit(limit),
+      productModel.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    const from = total === 0 ? 0 : skip + 1;
+    const to = Math.min(skip + limit, total);
+
+    res.status(200).json({
+      message: "Products retrieved successfully",
+      success: true,
+      data: products,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages,
+        from,
+        to,
+        hasPrev: page > 1,
+        hasNext: page < totalPages,
+      },
+    });
+  } catch (error) {
+    console.error("Error listing products:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      data: null,
+      error: error.message,
+    });
   }
 };
 
@@ -1031,4 +1150,5 @@ export {
   deletePurchase,
   deleteSale,
   getLowStockProducts,
+  listProductCategory,
 };

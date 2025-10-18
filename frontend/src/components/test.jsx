@@ -1,71 +1,61 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Users,
-  Clock,
-  CheckCircle,
-} from "lucide-react";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Users, Clock, CheckCircle } from 'lucide-react';
 
 // Mock API - Replace with your actual API calls
 const mockEmployees = Array.from({ length: 124 }, (_, i) => ({
   id: i + 1,
-  firstName: ["John", "Jane", "Bob", "Alice", "Charlie"][i % 5],
-  lastName: ["Smith", "Doe", "Johnson", "Williams", "Brown"][i % 5],
+  firstName: ['John', 'Jane', 'Bob', 'Alice', 'Charlie'][i % 5],
+  lastName: ['Smith', 'Doe', 'Johnson', 'Williams', 'Brown'][i % 5],
   email: `employee${i + 1}@company.com`,
-  phone: `555-${String(i).padStart(4, "0")}`,
-  department: ["Engineering", "Sales", "Marketing", "HR", "Finance"][i % 5],
-  status: ["Active", "Pending", "Inactive"][i % 3],
-  createdAt: new Date(2024, 0, 1 + i).toISOString(),
+  phone: `555-${String(i).padStart(4, '0')}`,
+  department: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance'][i % 5],
+  status: ['Active', 'Pending', 'Inactive'][i % 3],
+  createdAt: new Date(2024, 0, 1 + i).toISOString()
 }));
 
 const fetchEmployees = async (params) => {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
   const { search, department, status, page, pageSize, sort } = params;
-
+  
   let filtered = [...mockEmployees];
-
+  
   // Apply search filter
   if (search) {
     const searchLower = search.toLowerCase();
-    filtered = filtered.filter(
-      (emp) =>
-        emp.firstName.toLowerCase().includes(searchLower) ||
-        emp.lastName.toLowerCase().includes(searchLower) ||
-        emp.email.toLowerCase().includes(searchLower) ||
-        emp.phone.includes(searchLower)
+    filtered = filtered.filter(emp => 
+      emp.firstName.toLowerCase().includes(searchLower) ||
+      emp.lastName.toLowerCase().includes(searchLower) ||
+      emp.email.toLowerCase().includes(searchLower) ||
+      emp.phone.includes(searchLower)
     );
   }
-
+  
   // Apply department filter
-  if (department && department !== "all") {
-    filtered = filtered.filter((emp) => emp.department === department);
+  if (department && department !== 'all') {
+    filtered = filtered.filter(emp => emp.department === department);
   }
-
+  
   // Apply status filter
-  if (status && status !== "all") {
-    filtered = filtered.filter((emp) => emp.status === status);
+  if (status && status !== 'all') {
+    filtered = filtered.filter(emp => emp.status === status);
   }
-
+  
   // Apply sorting
-  const [sortField, sortDir] = sort.split(":");
+  const [sortField, sortDir] = sort.split(':');
   filtered.sort((a, b) => {
     const aVal = a[sortField];
     const bVal = b[sortField];
     const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-    return sortDir === "desc" ? -comparison : comparison;
+    return sortDir === 'desc' ? -comparison : comparison;
   });
-
+  
   const total = filtered.length;
   const totalPages = Math.ceil(total / pageSize);
   const offset = (page - 1) * pageSize;
   const data = filtered.slice(offset, offset + pageSize);
-
+  
   return { data, total, page, pageSize, totalPages };
 };
 
@@ -75,14 +65,14 @@ const EmployeeGrid = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
+  
   // Filter state
-  const [search, setSearch] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-  const [department, setDepartment] = useState("all");
-  const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState("createdAt:desc");
-
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [department, setDepartment] = useState('all');
+  const [status, setStatus] = useState('all');
+  const [sort, setSort] = useState('createdAt:desc');
+  
   // UI state
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -109,31 +99,24 @@ const EmployeeGrid = () => {
     setLoading(true);
     setError(null);
     try {
-      const result = await fetchEmployees({
-        search,
-        department,
-        status,
-        page,
-        pageSize,
-        sort,
-      });
+      const result = await fetchEmployees({ search, department, status, page, pageSize, sort });
       setData(result.data);
       setTotal(result.total);
       setTotalPages(result.totalPages);
-
+      
       // Update stats (simplified - you might want a separate endpoint)
       setStats({
         total: mockEmployees.length,
-        pending: mockEmployees.filter((e) => e.status === "Pending").length,
-        active: mockEmployees.filter((e) => e.status === "Active").length,
+        pending: mockEmployees.filter(e => e.status === 'Pending').length,
+        active: mockEmployees.filter(e => e.status === 'Active').length
       });
-
+      
       // Handle edge case: page exceeds totalPages
       if (result.totalPages > 0 && page > result.totalPages) {
         setPage(result.totalPages);
       }
     } catch (err) {
-      setError("Failed to load employees");
+      setError('Failed to load employees');
     } finally {
       setLoading(false);
     }
@@ -151,38 +134,34 @@ const EmployeeGrid = () => {
   const getPageNumbers = () => {
     const pages = [];
     const showEllipsis = totalPages > 7;
-
+    
     if (!showEllipsis) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
       return pages;
     }
-
+    
     // Always show first page
     pages.push(1);
-
-    if (page > 3) pages.push("...");
-
+    
+    if (page > 3) pages.push('...');
+    
     // Show pages around current
-    for (
-      let i = Math.max(2, page - 1);
-      i <= Math.min(totalPages - 1, page + 1);
-      i++
-    ) {
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
       pages.push(i);
     }
-
-    if (page < totalPages - 2) pages.push("...");
-
+    
+    if (page < totalPages - 2) pages.push('...');
+    
     // Always show last page
     if (totalPages > 1) pages.push(totalPages);
-
+    
     return pages;
   };
 
   const handleDelete = async (id) => {
     // After delete, refetch current page
     await fetchData();
-
+    
     // If page is now empty and not page 1, go to previous page
     if (data.length === 1 && page > 1) {
       setPage(page - 1);
@@ -192,10 +171,8 @@ const EmployeeGrid = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Employee Management
-        </h1>
-
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Employee Management</h1>
+        
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
@@ -266,7 +243,7 @@ const EmployeeGrid = () => {
               <p className="text-red-700">{error}</p>
             </div>
           )}
-
+          
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -274,42 +251,24 @@ const EmployeeGrid = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <input type="checkbox" className="rounded" />
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Phone
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Department
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {loading ? (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
+                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                       Loading...
                     </td>
                   </tr>
                 ) : data.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
+                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                       No employees found
                     </td>
                   </tr>
@@ -333,9 +292,7 @@ const EmployeeGrid = () => {
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {emp.firstName} {emp.lastName}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900">{emp.firstName} {emp.lastName}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{emp.email}</div>
@@ -344,20 +301,14 @@ const EmployeeGrid = () => {
                         <div className="text-sm text-gray-500">{emp.phone}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {emp.department}
-                        </div>
+                        <div className="text-sm text-gray-500">{emp.department}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            emp.status === "Active"
-                              ? "bg-green-100 text-green-800"
-                              : emp.status === "Pending"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          emp.status === 'Active' ? 'bg-green-100 text-green-800' :
+                          emp.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
                           {emp.status}
                         </span>
                       </td>
@@ -416,28 +367,26 @@ const EmployeeGrid = () => {
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-
-                {getPageNumbers().map((pageNum, idx) =>
-                  pageNum === "..." ? (
-                    <span key={`ellipsis-${idx}`} className="px-3 py-1">
-                      ...
-                    </span>
+                
+                {getPageNumbers().map((pageNum, idx) => (
+                  pageNum === '...' ? (
+                    <span key={`ellipsis-${idx}`} className="px-3 py-1">...</span>
                   ) : (
                     <button
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
-                      aria-current={page === pageNum ? "page" : undefined}
+                      aria-current={page === pageNum ? 'page' : undefined}
                       className={`px-3 py-1 rounded text-sm ${
                         page === pageNum
-                          ? "bg-blue-600 text-white font-medium"
-                          : "hover:bg-gray-200 text-gray-700"
+                          ? 'bg-blue-600 text-white font-medium'
+                          : 'hover:bg-gray-200 text-gray-700'
                       }`}
                     >
                       {pageNum}
                     </button>
                   )
-                )}
-
+                ))}
+                
                 <button
                   onClick={() => setPage(page + 1)}
                   disabled={page === totalPages || totalPages === 0}

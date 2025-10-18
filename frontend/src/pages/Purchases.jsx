@@ -1,6 +1,7 @@
 import { Edit, Eye, Trash2 } from "lucide-react";
 import Table from "../components/Table";
 import { purchaseColumns, purchaseData } from "../data/data";
+import Pagination from "../components/Pagination";
 
 const Purchases = () => {
   const renderData = () => {
@@ -86,6 +87,7 @@ const Purchases = () => {
   return (
     <div className="px-10 text-cyan-800">
       <Table renderData={renderData} colData={purchaseColumns} />
+      {/* <Pagination /> */}
     </div>
   );
 };

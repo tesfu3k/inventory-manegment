@@ -1,5 +1,6 @@
 import Cards from "../components/Cards";
 import DashboardNavBar from "../components/DashboardNavBar";
+import axios from "axios";
 
 import {
   UserCog, // Total Employees
@@ -11,17 +12,81 @@ import {
 } from "lucide-react";
 import SaleVsPurchase from "../components/SaleVsPurchase";
 import QuickActions from "../components/QuickActions";
-
-const DashboardStats = [
-  { id: 1, icons: UserCog, title: "Total Employees", value: "0" },
-  { id: 2, icons: Users, title: "Total Customers", value: "0" },
-  { id: 3, icons: Truck, title: "Total Suppliers", value: "0" },
-  { id: 4, icons: Boxes, title: "Total Products", value: "0" },
-  { id: 5, icons: ShoppingCart, title: "Today Sales", value: "0" },
-  { id: 6, icons: ClipboardList, title: "Today Purchases", value: "0" },
-];
+import { useEffect, useState } from "react";
 
 const DashBoard = () => {
+  const [dashboardStatus, setDashboardStatus] = useState({
+    totalCustomers: "",
+    totalEmployees: "",
+    todayTotalPurchase: "",
+    totalSupplier: "",
+    todayTotalSale: "",
+    totalProduct: "",
+  });
+  useEffect(() => {
+    try {
+      const fatchDahboardStatus = async () => {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/employees/dashbord-status`,
+          { withCredentials: true }
+        );
+
+        if (data.success) return setDashboardStatus(data.status);
+      };
+
+      fatchDahboardStatus();
+    } catch (error) {
+      console.error(error, "fail to fach dashbord status");
+    }
+  }, []);
+  const DashboardStats = [
+    {
+      id: 1,
+      icons: UserCog,
+      title: "Total Employees",
+      value: dashboardStatus.totalEmployees,
+    },
+    {
+      id: 2,
+      icons: Users,
+      title: "Total Customers",
+      value: dashboardStatus.totalCustomers,
+    },
+    {
+      id: 3,
+      icons: Truck,
+      title: "Total Suppliers",
+      value: dashboardStatus.totalSupplier,
+    },
+    {
+      id: 4,
+      icons: Boxes,
+      title: "Total Products",
+      value: dashboardStatus.totalProduct,
+    },
+    {
+      id: 5,
+      icons: ShoppingCart,
+      title: "Today Sales",
+      value: (
+        <>
+          {dashboardStatus.todayTotalSale}{" "}
+          <span className="text-sm text-cyan-800/50 ml-1">ETB</span>
+        </>
+      ),
+    },
+    {
+      id: 6,
+      icons: ClipboardList,
+      title: "Today Purchases",
+      value: (
+        <>
+          {dashboardStatus.todayTotalPurchase}{" "}
+          <span className="text-sm text-cyan-800/50">ETB</span>
+        </>
+      ),
+    },
+  ];
   return (
     <div className="px-10">
       <DashboardNavBar />

@@ -1,11 +1,63 @@
-import { Edit, Eye, Trash2 } from "lucide-react";
+import { Edit, Eye, Search, Trash2 } from "lucide-react";
 import ProductNavBar from "../components/ProductNavBar";
 import Table from "../components/Table";
-import { productColumns, productData } from "../data/data.js";
+import { productColumns } from "../data/data.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Pagination from "../components/Pagination.jsx";
 const Products = () => {
+  const [products, setProducts] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [meta, setMeta] = useState({
+    total: 0,
+    totalPages: 1,
+    from: 0,
+    to: 0,
+    hasPrev: false,
+    hasNext: false,
+  });
+  const [filters, setfilters] = useState({
+    query: "",
+    status: "",
+    category: "",
+  });
+
+  const [sort, setSort] = useState("");
+
+  useEffect(() => {
+    const fatchProducts = async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/inventory/products`,
+        {
+          withCredentials: true,
+          validateStatus: (status) => status < 500,
+          params: {
+            page,
+            limit,
+            sort,
+            search: filters.query,
+            category: filters.category,
+            status: filters.status,
+          },
+        }
+      );
+      if (data.success) {
+        setProducts(data.data || []);
+        setMeta(data.meta || {});
+        return;
+      }
+      if (!data.success) return toast.error(data.message);
+    };
+    const delay = setTimeout(fatchProducts, 400);
+    return () => clearTimeout(delay);
+  }, [page, limit, sort, filters]);
+
   const renderData = () => {
-    return productData.map((product) => (
-      <tr key={product.id}>
+    return products.map((product) => (
+      <tr key={product._id}>
         {/* checkbox */}
         <td className="px-4 py-2">
           <input type="checkbox" />
@@ -16,50 +68,48 @@ const Products = () => {
           <div className="flex items-center">
             <div className="flex-shrink-0 h-12 w-12">
               <img
-                src={product.image}
+                src="/product.jpg"
                 alt={product.name}
                 className="h-12 w-12 object-cover rounded-full"
               />
             </div>
             <div className="ml-4">
               <div className="text-sm font-medium">{product.name}</div>
-              <div className="text-sm">{product.email}</div>
             </div>
           </div>
         </td>
 
-        {/* catagory */}
-        <td className="px-4 py-2 whitespace-nowrap hidden md:table-cell">
+        {/* category */}
+        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
           <div className="text-sm font-medium">{product.category}</div>
         </td>
 
-        {/* Supplier */}
+        {/* Unit price */}
+        <td className="px-4 py-2 whitespace-nowrap hidden sm:table-cell">
+          <div className="text-sm">{product.unitPrice}</div>
+        </td>
+
+        {/* Stock quantity */}
         <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
-          <div className="text-sm">{product.supplier}</div>
-        </td>
-
-        {/* Price */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm font-medium">{product.price}</div>
-        </td>
-
-        {/* Stock */}
-        <td className="px-4 py-2 whitespace-nowrap hidden xl:table-cell">
-          <div className="text-sm font-medium">{product.stock}</div>
+          <div className="text-sm font-medium">{product.stockQuantity}</div>
         </td>
 
         {/* status */}
-        <td className="px-4 py-2 whitespace-nowrap hidden 2xl:table-cell">
+        <td className="px-4 py-2 whitespace-nowrap hidden lg:table-cell">
           <span
             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-              product.status === "In Stock"
-                ? "bg-green-100 text-green-900"
-                : product.status === "Low Stock"
+              product.stockQuantity === 0
+                ? "bg-red-100 text-red-900"
+                : product.stockQuantity <= product.lowStockThreshed
                 ? "bg-yellow-100 text-yellow-900"
-                : "bg-red-100 text-red-900"
+                : "bg-green-100 text-green-900"
             }`}
           >
-            {product.status}
+            {product.stockQuantity === 0
+              ? "Out of Stock"
+              : product.stockQuantity <= product.lowStockThreshed
+              ? "Low Stock"
+              : "In Stock"}
           </span>
         </td>
 
@@ -92,10 +142,34 @@ const Products = () => {
 
   return (
     <div className="px-10 text-cyan-800">
-      <ProductNavBar />
+      <ProductNavBar onFiltersChange={setfilters} onSortChange={setSort} />
       <Table renderData={renderData} colData={productColumns} />
+      <Pagination
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        meta={meta}
+      />
     </div>
   );
 };
 
 export default Products;
+
+{
+  /* <ProductNavBar
+        onFiltersChange={(updateFn) => {
+          setfilters((prev) => {
+            const next =
+              typeof updateFn === "function" ? updateFn(prev) : updateFn;
+            return next;
+          });
+          setPage(1);
+        }}
+        onSortChange={(value) => {
+          setSort(value);
+          setPage(1);
+        }}
+      /> */
+}

@@ -25,9 +25,12 @@ const LogIn = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/auth/sign-in",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/sign-in`,
         loginData,
-        { validateStatus: (status) => status < 500, withCredentials: true }
+        {
+          validateStatus: (status) => status < 500,
+          withCredentials: true,
+        }
       );
       if (data.success) {
         setUser(data.data.user);
