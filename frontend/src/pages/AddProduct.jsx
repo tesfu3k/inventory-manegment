@@ -1,3 +1,4 @@
+import CategorySelector from "../components/CategorySelector.jsx";
 const AddProduct = () => {
   return (
     <form onSubmit={""} className="px-10 text-cyan-800">
@@ -13,7 +14,7 @@ const AddProduct = () => {
         <div>
           {" "}
           <h1 className="text-2xl font-bold mb-3 max-lg:text-lg max-lg:text-center">
-            Personal Information
+            Product Details
           </h1>
           <div className=" flex gap-3 lg:gap-20 max-lg:flex-col">
             <div className="flex flex-col flex-1">
@@ -21,43 +22,25 @@ const AddProduct = () => {
                 className="text-md text-cyan-500 font-medium"
                 htmlFor="firstName"
               >
-                First Name <span className="text-red-500">*</span>
+                Product Name <span className="text-red-500">*</span>
               </label>
               <input
                 className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-                id="firstName"
+                id="productName"
                 type="text"
-                name="firstName"
+                name="productName"
                 onChange={""}
                 value={""}
-                placeholder="Enter first name"
+                placeholder="Enter product name"
               />
             </div>
 
-            <div className="flex flex-col flex-1">
-              <label
-                className="text-md text-cyan-500 font-medium "
-                htmlFor="lastName"
-              >
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-                id="lastName"
-                type="text"
-                name="lastName"
-                // value={employeeData.lastName}
-                // onChange={onChangeHandler}
-                placeholder="Enter last Name"
-              />
-            </div>
-
-            <div className="flex flex-col flex-1">
+            {/* <div className="flex flex-col flex-1">
               <label
                 className="text-md text-cyan-500 font-medium "
                 htmlFor="gender"
               >
-                Gender <span className="text-red-500">*</span>
+                Category <span className="text-red-500">*</span>
               </label>
               <select
                 name="gender"
@@ -66,20 +49,35 @@ const AddProduct = () => {
                 // onChange={onChangeHandler}
                 className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
               >
-                <option value="" disabled>
-                  Select gender
-                </option>
+                <option value="">Select category</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
-            </div>
+            </div> */}
+
+            <CategorySelector />
+          </div>
+          <div className="flex flex-col flex-1 mt-6">
+            <label
+              className="text-md text-cyan-500 font-medium"
+              htmlFor="description"
+            >
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20 resize-none"
+              id="description"
+              name="description"
+              rows={4}
+              placeholder="Enter short product description"
+            ></textarea>
           </div>
         </div>
 
         <hr className="my-5 border-cyan-800/10 b" />
 
         <h1 className="text-2xl font-bold mb-3 max-lg:text-lg max-lg:text-center">
-          Contact Information
+          Stock and Pricing
         </h1>
         <div className=" flex gap-3 lg:gap-20 max-lg:flex-col">
           <div className="flex flex-col flex-1">
@@ -87,36 +85,36 @@ const AddProduct = () => {
               className="text-md text-cyan-500 font-medium"
               htmlFor="email"
             >
-              Email<span className="text-red-500">*</span>
+              Unit Price<span className="text-red-500">*</span>
             </label>
             <input
               className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-              id="email"
-              type="email"
-              name="email"
-              autoComplete="email"
+              id="unitPrice"
+              type="number"
+              name="unitPrice"
+              autoComplete="unitPrice"
               // value={employeeData.email}
               // onChange={onChangeHandler}
-              placeholder="Enter email"
+              placeholder="Enter price"
             />
           </div>
 
           <div className="flex flex-col flex-1">
             <label
               className="text-md text-cyan-500 font-medium "
-              htmlFor="phoneNumber"
+              htmlFor="stockQuantity"
             >
-              Phone number <span className="text-red-500">*</span>
+              Stock Quantity <span className="text-red-500">*</span>
             </label>
             <input
               className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-              id="phone"
-              type="tel"
-              name="phone"
-              // value={employeeData.phone}
+              id="stockQuantity"
+              type="number"
+              default={0}
+              name="stockQuantity"
+              // value={employeeData.stockQuantity}
               // onChange={onChangeHandler}
-              placeholder="e.g. +251 9xx xxx xxx"
-              inputMode="tel"
+              placeholder="Enter available stock quantity"
             />
           </div>
 
@@ -125,117 +123,37 @@ const AddProduct = () => {
               className="text-md text-cyan-500 font-medium "
               htmlFor="address"
             >
-              Address <span className="text-red-500">*</span>
+              Low Stock Threshold <span className="text-red-500">*</span>
             </label>
             <input
               className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-              id="address"
+              id="lowStockThreshold"
               type="text"
-              name="address"
+              name="lowStockThreshold"
+              default={10}
               // value={employeeData.address}
               // onChange={onChangeHandler}
               placeholder="Enter Address"
             />
           </div>
-        </div>
-
-        <hr className="my-5 border-cyan-800/10 b" />
-
-        <h1 className="text-2xl font-bold mb-3 max-lg:text-lg max-lg:text-center">
-          Job Information
-        </h1>
-        <div className=" flex gap-3 lg:gap-20 max-lg:flex-col">
           <div className="flex flex-col flex-1">
             <label
               className="text-md text-cyan-500 font-medium "
-              htmlFor="position"
+              htmlFor="address"
             >
-              Position <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="position"
-              id="position"
-              // value={employeeData.position}
-              // onChange={onChangeHandler}
-              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-            >
-              <option value="" disabled>
-                Select position
-              </option>
-              <option value="engineer">Engineer</option>
-              <option value="seniorEngineer">Senior Engineer</option>
-              <option value="manager">Manager</option>
-              <option value="director">Director</option>
-              <option value="intern">Intern</option>
-              <option value="designer">Designer</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col flex-1">
-            <label
-              className="text-md text-cyan-500 font-medium "
-              htmlFor="department"
-            >
-              Department <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="department"
-              id="department"
-              // value={employeeData.department}
-              // onChange={onChangeHandler}
-              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-            >
-              <option value="" disabled>
-                Select department
-              </option>
-              <option value="engineering">Engineering</option>
-              <option value="design">Design</option>
-              <option value="sales">Sales</option>
-              <option value="hr">HR</option>
-              <option value="finance">Finance</option>
-              <option value="operations">Operations</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col flex-1  relative">
-            <label
-              className="text-md text-cyan-500 font-medium"
-              htmlFor="salary"
-            >
-              Salary <span className="text-red-500">*</span>
+              Created Date <span className="text-red-500">*</span>
             </label>
             <input
-              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-              id="salary"
-              min={0}
-              step={1}
-              type="number"
-              name="salary"
-              // value={employeeData.salary}
+              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20 cursor-not-allowed"
+              id="lowStockThreshold"
+              type="text"
+              name="lowStockThreshold"
+              readOnly
+              disabled
+              default={10}
+              // value={employeeData.address}
               // onChange={onChangeHandler}
-              placeholder="Enter salary"
-            />
-            <span className="absolute top-8 right-4">ETB</span>
-            <p className="text-xs hidden lg:block">
-              Enter amount in Ethiopian Birr
-            </p>
-          </div>
-
-          <div className="flex flex-col flex-1">
-            <label
-              className="text-md text-cyan-500 font-medium "
-              htmlFor="startDate"
-            >
-              Start Date <span className="text-red-500">*</span>
-            </label>
-            <input
-              className="w-full mt-1 border border-cyan-300 rounded-md px-3 py-2 text-sm outline-0 focus:ring-4 focus:ring-cyan-500/20"
-              id="startDate"
-              type="date"
-              name="startDate"
-              // value={employeeData.startDate}
-              // onChange={onChangeHandler}
-              placeholder="Enter start date"
+              placeholder=""
             />
           </div>
         </div>
@@ -254,7 +172,7 @@ const AddProduct = () => {
             type="submit"
             className="w-full bg-cyan-800 rounded-xl text-white py-3 hover:bg-cyan-600 active:scale-95 cursor-pointer"
           >
-            Save Employee
+            Save Product
           </button>
         </div>
       </div>
