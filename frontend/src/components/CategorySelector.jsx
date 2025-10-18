@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CategorySelector = () => {
+const CategorySelector = ({ onCategoryChange }) => {
   const [category, setCategory] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customCategory, setCustomCategory] = useState("");
@@ -45,14 +45,17 @@ const CategorySelector = () => {
 
     if (value === "Other") {
       setShowCustomInput(true);
+      onCategoryChange("");
     } else {
       setShowCustomInput(false);
       setCustomCategory("");
+      onCategoryChange(value);
     }
   };
 
   const handleCustomCategoryChange = (e) => {
     setCustomCategory(e.target.value);
+    onCategoryChange(e.target.value);
   };
 
   return (
