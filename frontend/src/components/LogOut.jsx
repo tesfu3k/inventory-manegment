@@ -1,0 +1,42 @@
+import { useContext } from "react";
+import { AuthContext } from "../context/contextCreator";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { LogOut as SignOutIcon } from "lucide-react";
+
+const LogOut = ({ collapsed }) => {
+  const { setUser } = useContext(AuthContext);
+
+  const handleLogOut = async () => {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/sign-out`,
+        undefined,
+        {
+          validateStatus: (status) => status < 500,
+          withCredentials: true, //to send and recive cookies
+        }
+      );
+
+      if (data.success) {
+        setUser(null);
+        return toast.success("Sign out successfully");
+      }
+      if (!data.success) return toast.error(data.message);
+    } catch (error) {
+      toast.error("something went wrong, Please try again later", error);
+    }
+  };
+
+  return (
+    <button
+      className="flex gap-4 px-3 py-2 border-none rounded-md text-red-600 font-bold cursor-pointer hover:bg-red-600/20 active:scale-95 md:w-full"
+      onClick={handleLogOut}
+    >
+      <SignOutIcon />
+      {!collapsed && <span className="max-md:hidden">Log out</span>}
+    </button>
+  );
+};
+
+export default LogOut;

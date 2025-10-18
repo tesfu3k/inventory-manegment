@@ -6,7 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node src/main.js",
-    "dev": "node --watch src/main.js"
+    "dev": "node --watch src/main.js",
+    "seed:employees": "node --env-file=.env scripts/seed-employees.js",
+    "seed:employees:reset": "RESET=true node --env-file=.env scripts/seed-employees.js",
+    "seed:employees:overwrite": "OVERWRITE=true node --env-file=.env scripts/seed-employees.js",
+    "seed:products": "node --env-file=.env scripts/seed-products.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +19,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

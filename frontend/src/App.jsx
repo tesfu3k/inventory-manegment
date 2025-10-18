@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import SignUp from "./pages/SignUp";
 
-function App() {
-  const [count, setCount] = useState(0)
+import LogIn from "./pages/LogIn";
+import DashBoard from "./pages/DashBoard";
 
+import AuthLayout from "./layout/AuthLayout";
+import PublicLayout from "./layout/PublicLayout";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "./context/contextCreator";
+import Employees from "./pages/Employees";
+import Products from "./pages/Products";
+import Purchases from "./pages/Purchases";
+import Sales from "./pages/Sales";
+import Customers from "./pages/Customers";
+import Settings from "./pages/Settings";
+import AddEmployee from "./pages/AddEmployee";
+import AddProduct from "./pages/AddProduct";
+import InviteEmployee from "./pages/InviteEmploye";
+
+const App = () => {
+  const { setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fatchUser = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (data.success) setUser(data.data.user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fatchUser();
+  }, [setUser]);
+
+  if (isLoading) return <h1>Loading...</h1>;
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
+      <Route path="/" element={<PublicLayout />}>
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/log-in" element={<LogIn />} />
+      </Route>
+      <Route path="/" element={<AuthLayout />}>
+        <Route index element={<DashBoard />} />
+        <Route path="employees" element={<Employees />} />
+        <Route path="products" element={<Products />} />
+        <Route path="purchases" element={<Purchases />} />
+        <Route path="sales" element={<Sales />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="employees/record" element={<AddEmployee />} />
+        <Route path="products/record" element={<AddProduct />} />
+      </Route>
+      <Route path="employees/record/:id" element={<InviteEmployee />} />
+    </Routes>
+  );
+};
 
-export default App
+export default App;
