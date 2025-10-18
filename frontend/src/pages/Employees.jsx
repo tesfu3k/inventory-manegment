@@ -35,6 +35,7 @@ const INITIAL_EMPLOYEE_FORM_STATE = {
 };
 
 const Employees = () => {
+  const { employeesStatus } = useContext(EmployeeContext);
   const [employees, setEmployees] = useState([]);
   const [status, setStatus] = useState({
     totalEmployees: "",
@@ -79,25 +80,25 @@ const Employees = () => {
       id: 1,
       icons: UserCog,
       title: "Total Employees",
-      value: status.totalEmployees,
+      value: employeesStatus.totalEmployees,
     },
     {
       id: 2,
       icons: Clock,
       title: "Pending Employees",
-      value: status.pendingEmployees,
+      value: employeesStatus.pendingEmployees,
     },
     {
       id: 3,
       icons: UserCheck,
       title: "Active Employees",
-      value: status.activeEmployees,
+      value: employeesStatus.activeEmployees,
     },
     {
       id: 4,
       icons: UserPlus,
       title: "New Hires ",
-      value: status.newHires,
+      value: employeesStatus.newHires,
       per: "/month",
     },
   ];

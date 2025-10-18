@@ -8,7 +8,7 @@ import AuthLayout from "./layout/AuthLayout";
 import PublicLayout from "./layout/PublicLayout";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "./context/contextCreator";
+import { AuthContext, EmployeeContext } from "./context/contextCreator";
 import Employees from "./pages/Employees";
 import Products from "./pages/Products";
 import Purchases from "./pages/Purchases";
@@ -21,6 +21,7 @@ import InviteEmployee from "./pages/InviteEmploye";
 
 const App = () => {
   const { setUser } = useContext(AuthContext);
+  const { setEmployeesStatus } = useContext(EmployeeContext);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fatchUser = async () => {
@@ -40,7 +41,20 @@ const App = () => {
     };
 
     fatchUser();
-  }, [setUser]);
+
+    const fatchEmployeeStatus = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:3000/api/employees/status",
+          { withCredentials: true }
+        );
+        if (data.success) setEmployeesStatus(data.status);
+      } catch (error) {
+        console.error("Error fetching Employee status:", error);
+      }
+    };
+    fatchEmployeeStatus();
+  }, []);
 
   if (isLoading) return <h1>Loading...</h1>;
   return (
